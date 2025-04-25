@@ -1,0 +1,402 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url('./resources/fonts/Poppins/Poppins-ExtraLight.woff2') format('woff2'),
+        url('./resources/fonts/Poppins/Poppins-ExtraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('./resources/fonts/Poppins/Poppins-SemiBold.woff2') format('woff2'),
+        url('./resources/fonts/Poppins/Poppins-SemiBold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+:root {
+    /* CSS HEX */
+    --lion: #C08C5Aff;
+    --lion--active: rgb(234, 130, 32);
+    --lawn-green: #96EA56ff;
+    --lawn-green-active: rgb(111, 246, 7);
+    --nyanza: #EFFEDBff;
+    --hunter-green: #3E6331ff;
+    --bistre: #382216ff;    
+}
+
+/* reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+}
+
+/* body, header, main, aside */
+body {
+    color: var(--bistre);
+    font-family: 'Poppins', monospace, sans-serif;
+    font-weight: 200;
+    letter-spacing: 0.125em;
+    padding-top: 1.5rem;
+}
+#header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+#title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: 0.2rem;
+}
+#main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.aside {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.7rem;
+}
+#footer {
+    margin-bottom: 0.5rem;
+}
+#toggleBtnSection {
+    display: flex;
+    gap: 0.4em;
+}
+
+/* Frases */
+#frase-section {
+    margin: 0.7rem 0;
+    max-width: 50rem;
+    letter-spacing: normal;
+}
+.frase-div-frase--frase {
+    letter-spacing: normal;
+    font-size: 1.1em;
+    margin: 0.5rem 0;
+}
+.frase-div-autor {
+    display: flex;
+    font-size: 0.65em;
+    font-family: monospace, 'Courier New', Courier;
+}
+.frase-div-autor--label {
+    font-weight: 600;
+}
+#idiomaSelect {
+    border: 1px solid var(--lawn-green);
+    border-radius: 0.25em;
+    padding: 0.15em 0.3em;
+    font-size: 0.5em;
+    cursor: pointer;
+    line-height: 1.1;
+}
+
+/* Forms */
+.form {
+    display: flex;
+    flex-direction: column;
+    min-width: 50rem;
+}
+#cityWeather, #forcastDays {
+    font-size: 0.8em;
+}
+.fieldset {
+    border-radius: 0.5rem 0.5rem 0 0;
+    border-bottom: none;
+    border: 1px solid var(--lawn-green);
+}
+.form--section {
+    display: flex;
+    flex-direction: column;
+}
+#xy--section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.xy--div{
+    display: flex;
+    flex-direction: column;
+}
+#select-canteiro {
+    margin: 0;
+}
+#canteiro_x, #canteiro_y {
+    width:24rem;
+}
+label, legend {
+    margin-bottom: 0.3rem;
+}
+#deleteForm, #addForm, #editForm, #weatherForm {
+    display: none;
+}
+#canteiroForm--fieldset {
+    display: flex;
+    gap: 0.5rem;
+}
+.input {
+    padding: 0.5rem;
+    margin-bottom: 0.3rem;
+    min-width: 12rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--lawn-green);
+}
+.input:active {
+    border: 1px solid var(--lion--active);
+}
+.input:focus {
+    outline: none;
+    border: 1px solid var(--lion--active);
+}
+.input::placeholder {
+    opacity: 0.5;
+}
+
+/* Buttons */
+#criarCanteiroBtn {
+    border-radius: 0.5rem;
+    margin-top: .3rem;
+}
+.btn--form--section {
+    width: 18rem;
+    margin-top: .5rem;
+}
+#form-buttons {
+    display: flex;
+    gap: 0.2rem;
+}
+.toggleFormBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 12.4rem;
+    padding: 0.2em;
+    margin-bottom: 0.3rem;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 0.9em;
+    color: var(--nyanza);
+    background-color: var(--lion);
+}
+.btn {
+    padding: 0.5rem;
+    width: 100%; 
+    border: none;
+    border-radius: 0 0 0.5rem 0.5rem;  
+    font-size: 1.2rem;
+    background-color: var(--lawn-green);
+    color: var(--bistre);
+    font-weight: 100;
+}
+.toggleFormBtn:hover {
+    background-color: var(--lion--active);
+}
+.btn:hover {
+    background-color: var(--lawn-green-active);
+}
+.toggleFormBtn:hover, .btn:hover {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.toggleBtnImg {
+    width: 2em;
+}
+
+/* Table */
+#tabela_resultado {
+    display: none;
+    transition: visibility 0s, opacity 0.5s linear;
+}
+#tabela_resultado {
+    margin: 1rem;
+}
+th, td {
+    border: 1px dashed var(--lion);
+    text-align: center;
+    padding: 0.5rem;
+}
+th {
+    font-weight: 700;
+    background-color: rgb(253, 243, 234);
+}
+td {
+    font-size: 0.9em;
+}
+
+/*weather aside*/
+
+#weatherForcastDiv {
+    display: flex;
+    flex-direction: column;
+}
+.weatherForcastDiv--inner {
+    display: flex;
+    justify-content: space-between;
+    border: 2px dashed var(--lawn-green);
+}
+.weatherInfo {
+    font-size: 0.8em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    letter-spacing: 0em;
+    margin: 0.3rem;
+    min-width: 9rem;
+    border: 1px dashed var(--lion);
+}
+.weatherInfo--label {
+    font-family: monospace, 'Courier New', Courier;
+    font-weight: 900;
+    font-size: 1.1em;
+    margin: 0.2rem;
+}
+.weatherInfo--data {
+    margin: 0.2rem;
+}
+
+/*footer*/
+#footer {
+    font-size: 0.75em;
+    letter-spacing: 0em;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+/*responsive*/
+@media (max-width: 845px) {
+    /* body, header, main, aside */
+    body {
+        letter-spacing: 0.1em;
+        margin-top: 0;
+    }
+    #header {
+        margin-bottom: 0.3rem;
+    }
+    #header--img {
+        width: 90%;
+        max-width: 28rem;
+    }
+    #title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0;
+        letter-spacing: 0.2rem;
+    }
+    .aside {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+        margin-top: 0.3rem;
+    }
+    #toggleBtnSection {
+        flex-direction: column;
+        gap: 0.2em;
+    }
+    /* Frases */
+    #frase-section {
+        margin: 0.7rem 0;
+        max-width: 15rem;
+        letter-spacing: normal;
+        text-align: center;
+    }
+    .frase-div-frase--frase {
+        letter-spacing: normal;
+        font-size: 0.8em;
+        margin: 0.5rem 0;
+    }
+    .frase-div-autor {
+        margin-left: 0.6rem;
+    }
+    /* Forms */
+    .form {
+        min-width: 10rem;
+    }
+    .fieldset {
+        padding-top: 0;
+        max-width: 19rem;
+    }
+    #canteiroForm--fieldset {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    #canteiro_x, #canteiro_y {
+        width: max-content;
+    }
+    .input {
+        width: 100%;
+        min-width: 0;
+        font-size: 0.6em;
+    }
+    legend {
+        padding-top: 0.5rem;
+    }
+    label, legend {
+        font-size: 0.8em;
+        margin-bottom: 0.2rem;
+    }
+    .section--toggle {
+        justify-content: center;
+        align-items: center;
+    }
+    .weatherForcastDiv--inner {
+        flex-wrap: wrap;
+        max-width: 13rem;
+    }
+    .weatherInfo--label{
+        font-size: 0.9em;
+        
+    }
+    .weatherInfo--data {
+        font-size: 0.7em;
+    }
+    .weatherInfo {
+        font-size: 0.7em;
+        margin: 0.1rem;
+        min-width: 6rem;
+    }
+
+    /* Buttons */
+    .btn--form--section {
+        width: 14rem;
+    }
+    .toggleFormBtn {
+        margin-bottom: 0;
+        font-size: 1rem;
+        min-width: 17.5rem;
+    }
+    .btn {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    .toggleBtnImg {
+        width: 1.5rem;
+    }
+
+    /* Table */
+    #tabela_resultado {
+        margin: 0.5rem 0.1rem;
+    }
+    th, td {
+        padding: 0.1rem;
+        font-size: 0.7em;
+        font-weight: 500;
+    }
+}
+@media (max-width: 374px) {
+    th, td {
+        padding: 0.1rem;
+        font-size: 0.6em;
+    }
+}

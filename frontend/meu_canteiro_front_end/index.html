@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="./resources/images/tree-icon.jpg">
+
+    <title>Canteiro Agroflorestal</title>
+
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+    
+    <header id="header">
+        <img id="header--img" src="./resources/images/saf_bg.png" alt="Consórcio de plantas">
+        <h1 id="title">Canteiro Agroflorestal</h1>  
+        <section id="frase-section">
+            <div id="frase-container"></div>
+            <select id="idiomaSelect">
+              <option value="pt">PT</option>
+              <option value="es">ES</option>
+              <option value="fr">FR</option>
+              <option value="it">IT</option>
+            </select>
+        </section>  
+    </header>
+
+    <main id="main">
+        <!-- Dropdown para selecionar canteiros existentes -->
+        <section class="form--section">
+            <label for="select-canteiro">Selecione Canteiro Existente:</label>
+            <select class="input" id="select-canteiro">
+                <option value="">---</option>
+            </select>
+        </section>
+
+        <!-- Ações para editar/deletar -->
+        <section class="btn--form--section" id="canteiro-actions">
+            <label for="criarCanteiroBtn">Crie Novo Canteiro:</label>
+            <button type="button" class="btn" id="criarCanteiroBtn">Novo Canteiro</button>
+        </section>
+
+        <!-- Formulário -->
+        <form class="form" id="canteiro--form" style="display: none;">
+            <fieldset class="fieldset" id="canteiroForm-plantas-fieldset">
+                <legend>Informações do canteiro:</legend>
+            
+                <section class="form--section">
+                    <label for="canteiro_nome">Nome:</label>
+                    <input type="text" id="canteiro_nome" class="input" required/>
+                </section>
+            
+                <section class="form--section" id="xy--section">
+                    <div class="xy--div">
+                        <label for="canteiro_x">Eixo X:</label>
+                        <input type="number" id="canteiro_x" class="input" min="0" required/>
+                    </div>
+                    <div class="xy--div">
+                        <label for="canteiro_y">Eixo Y:</label>
+                        <input type="number" id="canteiro_y" class="input" min="0" required>
+                    </div>
+                </section>
+            
+                <section class="form--section">
+                    <label for="canteiro_baixo">Baixo:</label>
+                    <select class="input canteiro_select" id="canteiro_baixo">
+                        <option value=""></option>
+                    </select>
+                </section>
+                <section class="form--section">
+                    <label for="canteiro_medio">Médio:</label> 
+                    <select class="input canteiro_select" id="canteiro_medio">
+                        <option value=""></option>
+                    </select>
+                </section>    
+                <section class="form--section">
+                    <label for="canteiro_alto">Alto:</label> 
+                    <select class="input canteiro_select" id="canteiro_alto">
+                        <option value=""></option>
+                    </select>
+                </section>
+                <section class="form--section">
+                    <label for="canteiro_emergente">Emergente:</label> 
+                    <select class="input canteiro_select" id="canteiro_emergente">
+                        <option value=""></option>
+                    </select>
+                </section>
+            </fieldset>
+            <section class="form--section" id="form-buttons">
+                <button type="button" class="btn" id="saveCanteiroBtn">Salvar Canteiro</button>
+                <button type="button" class="btn danger" id="deleteCanteiroBtn" style="display: none;">Deletar</button>
+                <button type="button" class="btn" id="visualizarCanteiroBtn">Visualizar</button>
+                <button type="button" class="btn" id="limparVisualizacaoBtn" style="display: none;">Limpar</button>
+            </section>
+        </form>
+        <table id="tabela_resultado">
+        </table>
+        <div id="graphDiv"></div>
+    </main>
+    <aside class="aside">
+        <section id="toggleBtnSection">
+            <button type="button" class="toggleFormBtn" id="addForm_toggleBtn" value="false">
+                <img id="toggleBtnImgAdd" class="toggleBtnImg"  src="./resources/images/expand_more.svg" alt="arrow-icon">
+                Adicionar Planta
+            </button>
+            <button type="button" class="toggleFormBtn" id="editForm_toggleBtn" value="false">
+                <img id="toggleBtnImgEdit" class="toggleBtnImg"  src="./resources/images/expand_more.svg" alt="arrow-icon">
+                Editar Planta
+            </button>
+            <button type="button" class="toggleFormBtn" id="deleteForm_toggleBtn" value="false">
+                <img id="toggleBtnImgDel" class="toggleBtnImg" src="./resources/images/expand_more.svg" alt="arrow-icon">
+                Deletar Planta
+            </button>
+            <button type="button" class="toggleFormBtn" id="weatherForm_toggleBtn" value="false">
+                <img id="toggleBtnImgWea" class="toggleBtnImg" src="./resources/images/expand_more.svg" alt="arrow-icon">
+                Previsão do tempo
+            </button>
+        </section>
+        <section id="toggleFormSection">
+            <form class="form" id="addForm">
+                <fieldset class="fieldset">
+                    <legend>Adicione espécies no banco de dados:</legend>
+                    <section class="form--section">
+                        <label for="nomePlanta">Nome:</label> 
+                        <input id="nomePlanta" class="input" type="text"  placeholder="Banana Prata">
+                    </section>
+                    <section class="form--section">
+                        <label for="novoEstrato">Estrato:</label> 
+                        <select class="input" id="novoEstrato">
+                            <option value=""></option>
+                            <option value="baixo">Baixo</option>
+                            <option value="medio">Médio</option>
+                            <option value="alto">Alto</option>
+                            <option value="emergente">Emergente</option>
+                        </select>
+                    </section>    
+                    <section class="form--section">
+                        <label for="tempoColheita">Tempo para colheita (dias):</label>
+                        <input id="tempoColheita" class="input" type="number" min="0" placeholder="420">
+                    </section>
+                    <section class="form--section">
+                        <label for="espacamento">Espaçamento entre plantas:</label> 
+                        <input id="espacamento" class="input" type="number" min="0" placeholder="3.0">
+                    </section>    
+                </fieldset>
+                <button type="button" class="btn" id="addBtn">Adicionar</button>
+            </form>
+            <form class="form" id="editForm">
+                <fieldset class="fieldset">
+                    <legend>Editar espécies do banco de dados:</legend>
+                    <section class="form--section">
+                        <label for="nomePlantaEdit">Nome:</label> 
+                        <select id="nomePlantaEdit" class="input"></select>
+                    </section>
+                    <section class="form--section">
+                        <label for="editEstrato">Estrato:</label> 
+                        <select class="input" id="editEstrato">
+                            <option value=""></option>
+                            <option value="baixo">Baixo</option>
+                            <option value="medio">Médio</option>
+                            <option value="alto">Alto</option>
+                            <option value="emergente">Emergente</option>
+                        </select>
+                    </section>    
+                    <section class="form--section">
+                        <label for="editTempoColheita">Tempo para colheita (dias):</label>
+                        <input id="editTempoColheita" class="input" type="number" min="0" placeholder="420">
+                    </section>
+                    <section class="form--section">
+                        <label for="editEspacamento">Espaçamento entre plantas:</label> 
+                        <input id="editEspacamento" class="input" type="number" min="0" placeholder="3.0">
+                    </section>    
+                </fieldset>
+                <button type="button" class="btn" id="editBtn">Editar</button>
+            </form>
+            <form class="form" id="deleteForm">
+                <fieldset class="fieldset">
+                    <legend>Deletar espécies no banco de dados:</legend>
+                    <section class="form--section">
+                        <label for="delete_select">Nome:</label> 
+                        <select id="delete_select" class="input"></select>
+                    </section>    
+                </fieldset>
+                <button type="button" class="btn" id="delBtn">Deletar</button>
+            </form>
+            <form class="form" id="weatherForm">
+                <fieldset class="fieldset">
+                    <legend>Previsão do Tempo:</legend>
+                    <section class="form--section">
+                        <label for="cityWeather">Cidade:</label> 
+                        <input type="text" class="input" name="cityWeather" id="cityWeather" list="listCitiesWeather" placeholder="Rio de Janeiro" required>
+                        <datalist id="listCitiesWeather">
+                            <option value="Rio de Janeiro">Rio de janeiro</option>
+                            <option value="Mangaratiba">Mangaratiba</option>
+                        </datalist>
+                        <label for="forcastDays">Dias:</label> 
+                        <input type="number" class="input" name="forcastDays" id="forcastDays" min="0" placeholder="1" max="6" required>
+                    </section>    
+                </fieldset>
+                <button type="button" class="btn" id="searchCityBtn">Previsão</button>
+                <div id="weatherForcastDiv"></div>
+            </form>
+        </section>
+    </aside>
+    <footer id="footer">
+        <p>Author: Leandro Simões</p>
+        <p><a href="mailto:leandrosimoesms@gmail.com">leandrosimoesms@gmail.com</a></p>
+      </footer>
+	<script type="module" src="./main.js"></script>
+  </body>
+</html>
