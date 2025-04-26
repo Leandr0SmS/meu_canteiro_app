@@ -401,3 +401,6 @@ def editar_canteiro(form: CanteiroUpdateSchema):
     except requests.exceptions.RequestException as e:
         logger.error(f"Erro ao comunicar com API de canteiro: {str(e)}")
         return {"message": "Erro interno ao tentar editar canteiro"}, 500
+    
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=5000, debug=False, use_reloader=False)

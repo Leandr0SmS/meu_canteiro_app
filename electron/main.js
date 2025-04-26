@@ -6,47 +6,77 @@ const fs = require('fs');
 
 // Keep a global reference of the window object to avoid garbage collection
 let mainWindow;
-let backendProcess = null;
+let backendMainProcess = null;
+let backendCanteiroProcess = null;
 
 // Check if running in development mode
 const isDev = process.argv.includes('--dev');
 
-function startBackend() {
-  // Path to the backend directory
-  const backendPath = path.join(__dirname, '..', 'backend', 'meu_canteiro_back_end');
-  
-  // Check if we're running in development mode or production
-  let pythonExecutable = 'python';
-  if (process.platform === 'win32') {
-    pythonExecutable = 'python';
-  }
-
-  console.log('Starting backend server...');
-  console.log(`Backend path: ${backendPath}`);
-  
-  // Start the Flask server
-  backendProcess = spawn(pythonExecutable, ['app.py'], {
-    cwd: backendPath,
-    stdio: 'pipe'
-  });
-
-  // Log backend output
-  backendProcess.stdout.on('data', (data) => {
-    console.log(`Backend stdout: ${data}`);
-  });
-
-  backendProcess.stderr.on('data', (data) => {
-    console.error(`Backend stderr: ${data}`);
-  });
-
-  backendProcess.on('close', (code) => {
-    console.log(`Backend process exited with code ${code}`);
-  });
-
-  // Give the backend some time to start
-  return new Promise((resolve) => {
-    setTimeout(resolve, 2000);
-  });
+async function startBackend() {
+    const backends = [
+        {
+          name: 'Main API',
+          path: path.join(__dirname, '..', 'backend', 'meu_canteiro_back_end'),
+          port: 5000
+        },
+        {
+          name: 'Canteiro API',
+          path: path.join(__dirname, '..', 'backend', 'meu_canteiro_canteiro_api'),
+          port: 5001
+        }
+      ];
+    
+      for (const backend of backends) {
+        const venvPath = path.join(backend.path, 'venv');
+        let pythonExecutable = 'python';
+        if (process.platform === 'win32') {
+          pythonExecutable = 'python';
+        }
+    
+        // Create virtual environment if it doesn't exist
+        if (!fs.existsSync(venvPath)) {
+          console.log(`[${backend.name}] Virtual environment not found. Creating one...`);
+          await new Promise((resolve, reject) => {
+            const createVenv = spawn(pythonExecutable, ['-m', 'venv', 'venv'], { cwd: backend.path, shell: true });
+            createVenv.stdout.on('data', (data) => console.log(`[${backend.name}] VENV stdout: ${data}`));
+            createVenv.stderr.on('data', (data) => console.error(`[${backend.name}] VENV stderr: ${data}`));
+            createVenv.on('close', (code) => code === 0 ? resolve() : reject(new Error('Failed to create virtual environment')));
+          });
+        }
+    
+        // Install required Python packages
+        console.log(`[${backend.name}] Installing dependencies...`);
+        const pipPath = path.join(venvPath, 'Scripts', 'pip.exe');
+        await new Promise((resolve, reject) => {
+          const installDeps = spawn(pipPath, ['install', '-r', 'requirements.txt'], { cwd: backend.path, shell: true });
+          installDeps.stdout.on('data', (data) => console.log(`[${backend.name}] PIP stdout: ${data}`));
+          installDeps.stderr.on('data', (data) => console.error(`[${backend.name}] PIP stderr: ${data}`));
+          installDeps.on('close', (code) => code === 0 ? resolve() : reject(new Error('Failed to install dependencies')));
+        });
+    
+        // Start the Flask API server
+        console.log(`[${backend.name}] Starting server...`);
+        const pythonPath = path.join(venvPath, 'Scripts', 'python.exe');
+        const proc = spawn(pythonPath, ['app.py'], {
+          cwd: backend.path,
+          stdio: 'pipe'
+        });
+    
+        // Log backend outputs
+        proc.stdout.on('data', (data) => console.log(`[${backend.name}] stdout: ${data}`));
+        proc.stderr.on('data', (data) => console.error(`[${backend.name}] stderr: ${data}`));
+        proc.on('close', (code) => console.log(`[${backend.name}] process exited with code ${code}`));
+    
+        // Save the process reference
+        if (backend.port === 5000) {
+          backendMainProcess = proc;
+        } else if (backend.port === 5001) {
+          backendCanteiroProcess = proc;
+        }
+      }
+    
+      // Wait a few seconds to make sure the servers are fully up
+      return new Promise((resolve) => setTimeout(resolve, 3000));
 }
 
 async function createWindow() {
@@ -100,14 +130,16 @@ app.on('activate', () => {
   }
 });
 
-// Clean up backend process when app is quitting
+// Clean up backend processes when app quits
 app.on('quit', () => {
-  if (backendProcess) {
-    console.log('Killing backend process...');
-    if (process.platform === 'win32') {
-      spawn('taskkill', ['/pid', backendProcess.pid, '/f', '/t']);
-    } else {
-      backendProcess.kill();
-    }
-  }
-});
+    console.log('Killing backend processes...');
+    [backendMainProcess, backendCanteiroProcess].forEach((proc) => {
+      if (proc) {
+        if (process.platform === 'win32') {
+          spawn('taskkill', ['/pid', proc.pid, '/f', '/t']);
+        } else {
+          proc.kill();
+        }
+      }
+    });
+  });
