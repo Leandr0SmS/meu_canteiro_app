@@ -1,0 +1,28 @@
+{
+  "name": "meu-canteiro-app",
+  "version": "1.0.0",
+  "description": "Canteiro Agroflorestal Desktop Application",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.meu-canteiro-app",
+    "productName": "Meu Canteiro App",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.jpg"
+    }
+  }
+}

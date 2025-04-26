@@ -4,3 +4,8 @@ export const config = {
     quotesAPI: 'https://qapi.vercel.app/api/random',
     MyMemorytranlateAPI: 'https://api.mymemory.translated.net/'
 };
+
+// Check if running in Electron
+if (window.api) {
+    console.log('Running in Electron environment');
+}
