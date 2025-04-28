@@ -297,28 +297,33 @@ async function visualizarCanteiro(nomeCanteiro) {
 async function carregarCanteiros(select, actions, form) {
     try {
         const response = await fetch(`${config.meuCanteiroApi}/canteiros`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
         const data = await response.json();
 
-        const dataCanteiros = data.canteiro;
+        const dataCanteiros = data.canteiro || [];
 
         select.innerHTML = `<option value="">Selecione um canteiro</option>`;
 
-        dataCanteiros.forEach(c => {
+        for (const c of dataCanteiros) {
             const option = document.createElement('option');
             option.value = c.nome_canteiro;
             option.textContent = c.nome_canteiro;
             select.appendChild(option);
-        });
+        }
 
         actions.style.display = dataCanteiros.length > 0 ? 'block' : 'none';
         form.style.display = 'none';
-        return dataCanteiros
+        return dataCanteiros;
 
     } catch (err) {
         console.error("Erro ao carregar canteiros:", err);
         alert("Não foi possível carregar os canteiros existentes.");
     }
 }
+
 
 /*
   --------------------------------------------------------------------------------------
