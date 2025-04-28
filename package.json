@@ -12,7 +12,7 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^29.4.6",
-    "electron-builder": "^24.9.1"
+    "electron-builder": "^24.13.3"
   },
   "build": {
     "appId": "com.meu-canteiro-app",
@@ -20,9 +20,22 @@
     "directories": {
       "output": "dist"
     },
+    "files": [
+      "electron/**/*",
+      "frontend/**/*",
+      "backend/**/*",
+      "backend/python-embed/**/*",
+      "package.json"
+    ],
     "win": {
       "target": "nsis",
       "icon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.jpg"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     }
   }
 }

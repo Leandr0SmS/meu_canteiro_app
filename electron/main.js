@@ -13,6 +13,27 @@ let backendCanteiroProcess = null;
 const isDev = process.argv.includes('--dev');
 
 async function startBackend() {
+
+  const embedPythonPath = path.join(__dirname, '..', 'backend', 'python-embed', 'python.exe');
+  const getPipScript = path.join(__dirname, '..', 'backend', 'python-embed', 'get-pip.py');
+
+  // Ensure pip is installed in the embedded Python
+  if (!fs.existsSync(path.join(__dirname, '..', 'backend', 'python-embed', 'Scripts', 'pip.exe'))) {
+    console.log('[Python Embed] Pip not found. Installing pip...');
+    await new Promise((resolve, reject) => {
+      const installPip = spawn(embedPythonPath, [getPipScript], {
+        cwd: path.join(__dirname, '..', 'backend', 'python-embed'),
+        shell: true
+      });
+      installPip.stdout.on('data', (data) => console.log(`[PIP Install] stdout: ${data}`));
+      installPip.stderr.on('data', (data) => console.error(`[PIP Install] stderr: ${data}`));
+      installPip.on('close', (code) => {
+        if (code === 0) resolve();
+        else reject(new Error('Failed to install pip'));
+      });
+    });
+  }
+
     const backends = [
         {
           name: 'Main API',
@@ -28,7 +49,7 @@ async function startBackend() {
     
       for (const backend of backends) {
         const venvPath = path.join(backend.path, 'venv');
-        let pythonExecutable = 'python';
+        let pythonExecutable = path.join(__dirname, '..', 'backend', 'python-embed', 'python.exe');
         if (process.platform === 'win32') {
           pythonExecutable = 'python';
         }
@@ -43,6 +64,18 @@ async function startBackend() {
             createVenv.on('close', (code) => code === 0 ? resolve() : reject(new Error('Failed to create virtual environment')));
           });
         }
+
+        await new Promise((resolve, reject) => {
+          const installPip = spawn(pythonExecutable, ['get-pip.py'], { cwd: path.join(__dirname, '..', 'backend', 'python-embed') });
+        
+          installPip.stdout.on('data', (data) => console.log(`[PIP Install] stdout: ${data}`));
+          installPip.stderr.on('data', (data) => console.error(`[PIP Install] stderr: ${data}`));
+        
+          installPip.on('close', (code) => {
+            if (code === 0) resolve();
+            else reject(new Error('Failed to install pip'));
+          });
+        });
     
         // Install required Python packages
         console.log(`[${backend.name}] Installing dependencies...`);
