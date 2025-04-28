@@ -21,7 +21,7 @@ async function startBackend() {
         },
         {
           name: 'Canteiro API',
-          path: path.join(__dirname, '..', 'backend', 'meu_canteiro_canteiro_api'),
+          path: path.join(__dirname, '..', 'backend', 'agroforestry_systems_design'),
           port: 5001
         }
       ];
