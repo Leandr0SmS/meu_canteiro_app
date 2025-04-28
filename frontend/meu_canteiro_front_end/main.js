@@ -291,12 +291,6 @@ function start() {
     );
   });
 
-  // Carrega ao iniciar
-  carregarFrase();
-
-  // Atualiza apenas tradução ao trocar idioma
-  idiomaSelect.addEventListener('change', atualizarTraducao);
-
   /*
     --------------------------------------------------------------------------------------
     Método para ouvir evento de clicar no botão #addBtn (Adicionar)
