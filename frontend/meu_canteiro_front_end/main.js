@@ -8,7 +8,6 @@ import {
   deletarCanteiro,
   visualizarCanteiro
 } from './modules/canteiro.js'
-import { buscarFrase, mostrarFrase, traduzirTexto } from './modules/frases.js';
 
 /*
   --------------------------------------------------------------------------------------
@@ -16,14 +15,11 @@ import { buscarFrase, mostrarFrase, traduzirTexto } from './modules/frases.js';
   --------------------------------------------------------------------------------------
 */
 const forcastBtn = document.getElementById('searchCityBtn');
-const resultTabel = document.getElementById('tabela_resultado');
 const addBtn = document.getElementById('addBtn');
 const delBtn = document.getElementById('delBtn');
 const editBtn = document.getElementById('editBtn');
-
 const toggleBtnSection = document.getElementById('toggleBtnSection');
 const toggleBtns = toggleBtnSection.childNodes;
-
 const selectCanteiro = document.getElementById('select-canteiro');
 const canteiroActions = document.getElementById('canteiro-actions');
 const criarBtn = document.getElementById('criarCanteiroBtn');
@@ -32,31 +28,9 @@ const salvarBtn = document.getElementById('saveCanteiroBtn');
 const form = document.getElementById('canteiro--form');
 const visualizarBtn = document.getElementById('visualizarCanteiroBtn');
 const limparBtn = document.getElementById('limparVisualizacaoBtn');
-
 const canteiroForm = document.getElementById('canteiro--form');
 const weatherForm = document.getElementById('weatherForm');
 const weatherForcastDiv = document.getElementById('weatherForcastDiv');
-const grafDiv = document.getElementById('graphDiv');
-
-
-const fraseDiv = document.getElementById('frase-container');
-const idiomaSelect = document.getElementById('idiomaSelect');
-
-let fraseAtual = null; // Armazena a frase original
-let idiomaAtual = 'pt'; // Padrão 
-
-const resultTableRaw = `
-                        <thead>
-                          <tr>
-                              <th>Espaçamento (cm)</th>
-                              <th>Estrato</th>
-                              <th>Nome</th>
-                              <th>Sombra (%)</th>
-                              <th>Dias Colheita</th>
-                          </tr>
-                        </thead>
-                      `;
-
 let todosCanteiros = [];
 
 /*
@@ -484,37 +458,4 @@ function limparFormulario() {
       const select = document.getElementById(`canteiro_${estrato}`);
       if (select) select.value = '';
   });
-}
-/*
-  --------------------------------------------------------------------------------------
-  Carregar nova frase
-  --------------------------------------------------------------------------------------
-*/
-async function carregarFrase() {
-  try {
-    idiomaAtual = idiomaSelect.value;
-    fraseAtual = await buscarFrase();
-    await mostrarFrase(fraseAtual, fraseDiv, idiomaAtual);
-  } catch (error) {
-    console.error('Erro ao carregar frase:', error);
-  }
-}
-
-/*
-  --------------------------------------------------------------------------------------
-  Traduzir frase existente ao mudar idioma
-  --------------------------------------------------------------------------------------
-*/
-async function atualizarTraducao() {
-  if (!fraseAtual) return;
-
-  idiomaAtual = idiomaSelect.value;
-  try {
-    const fraseTraduzida = await traduzirTexto(fraseAtual.quote, idiomaAtual);
-
-    fraseDiv.querySelector('.frase-div-frase--frase').innerText = fraseTraduzida;
-  } catch (error) {
-    console.error('Erro ao traduzir:', error);
-    fraseDiv.querySelector('.frase-div-frase--frase').innerText = 'Erro ao traduzir frase.';
-  }
 }
