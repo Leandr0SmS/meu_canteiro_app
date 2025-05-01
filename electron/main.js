@@ -49,16 +49,12 @@ async function startBackend() {
     
       for (const backend of backends) {
         const venvPath = path.join(backend.path, 'venv');
-        let pythonExecutable = path.join(__dirname, '..', 'backend', 'python-embed', 'python.exe');
-        if (process.platform === 'win32') {
-          pythonExecutable = 'python';
-        }
     
         // Create virtual environment if it doesn't exist
         if (!fs.existsSync(venvPath)) {
           console.log(`[${backend.name}] Virtual environment not found. Creating one...`);
           await new Promise((resolve, reject) => {
-            const createVenv = spawn(pythonExecutable, ['-m', 'venv', 'venv'], { cwd: backend.path, shell: true });
+            const createVenv = spawn(embedPythonPath, ['-m', 'venv', 'venv'], { cwd: backend.path, shell: true });
             createVenv.stdout.on('data', (data) => console.log(`[${backend.name}] VENV stdout: ${data}`));
             createVenv.stderr.on('data', (data) => console.error(`[${backend.name}] VENV stderr: ${data}`));
             createVenv.on('close', (code) => code === 0 ? resolve() : reject(new Error('Failed to create virtual environment')));
@@ -66,7 +62,7 @@ async function startBackend() {
         }
 
         await new Promise((resolve, reject) => {
-          const installPip = spawn(pythonExecutable, ['get-pip.py'], { cwd: path.join(__dirname, '..', 'backend', 'python-embed') });
+          const installPip = spawn(embedPythonPath, ['get-pip.py'], { cwd: path.join(__dirname, '..', 'backend', 'python-embed') });
         
           installPip.stdout.on('data', (data) => console.log(`[PIP Install] stdout: ${data}`));
           installPip.stderr.on('data', (data) => console.error(`[PIP Install] stderr: ${data}`));
