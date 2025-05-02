@@ -1,23 +1,46 @@
+# Node.js
 node_modules/
 dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# macOS
 .DS_Store
-npm-debug.log
-yarn-debug.log
-yarn-error.log
 
-# Cache do Python
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+
+# Python cache
 __pycache__/
-*.pyc
+*.py[cod]
+*/__pycache__/
 
-# Virtual environments
+# Python virtual environments
 venv/
 */venv/
 
-# Cache e metadados do pip
+# Pip
 *.egg-info/
 pip-selfcheck.json
 
-# Python embutido (exceto o executável se for necessário versionar)
+# Python embutido (ignora somente arquivos gerados, mas não o python.exe)
 backend/python-embed/__pycache__/
 backend/python-embed/Lib/__pycache__/
 backend/python-embed/Lib/site-packages/**/__pycache__/
+backend/python-embed/Lib/site-packages/**/*.dist-info/
+backend/python-embed/Lib/site-packages/**/*.egg-info/
+
+# Electron
+out/
+build/
+*.blockmap
+*.yml
+
+# VSCode
+.vscode/
