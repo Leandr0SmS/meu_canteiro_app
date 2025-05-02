@@ -4,3 +4,20 @@ dist/
 npm-debug.log
 yarn-debug.log
 yarn-error.log
+
+# Cache do Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+*/venv/
+
+# Cache e metadados do pip
+*.egg-info/
+pip-selfcheck.json
+
+# Python embutido (exceto o executável se for necessário versionar)
+backend/python-embed/__pycache__/
+backend/python-embed/Lib/__pycache__/
+backend/python-embed/Lib/site-packages/**/__pycache__/
