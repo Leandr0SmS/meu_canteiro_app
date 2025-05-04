@@ -24,24 +24,18 @@
       "electron/**/*",
       "frontend/**/*",
       "backend/**/*",
-      "backend/python-embed/**/*",
       "package.json"
     ],
     "extraResources": [
       {
         "from": "backend/python-embed",
-        "to": "backend/python-embed"
+        "to": "backend/python-embed",
+        "filter": ["**/*"]
       }
     ],
     "win": {
       "target": "nsis",
       "icon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.jpg"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
     }
   }
 }

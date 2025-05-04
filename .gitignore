@@ -32,9 +32,11 @@ pip-selfcheck.json
 # Python embutido (ignora somente arquivos gerados, mas não o python.exe)
 backend/python-embed/__pycache__/
 backend/python-embed/Lib/__pycache__/
+backend/python-embed/Lib/site-packages/
 backend/python-embed/Lib/site-packages/**/__pycache__/
 backend/python-embed/Lib/site-packages/**/*.dist-info/
 backend/python-embed/Lib/site-packages/**/*.egg-info/
+backend/python-embed/Scripts/
 
 # Electron
 out/
