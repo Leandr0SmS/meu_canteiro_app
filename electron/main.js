@@ -19,19 +19,28 @@ const embedPythonPath = app.isPackaged
 const backends = [
   {
     name: 'Main API',
-    path: path.join(__dirname, '..', 'backend', 'meu_canteiro_back_end'),
+    path: app.isPackaged
+      ? path.join(process.resourcesPath, 'backend', 'meu_canteiro_back_end')
+      : path.join(__dirname, '..', 'backend', 'meu_canteiro_back_end'),
     port: 5000
   },
   {
     name: 'Canteiro API',
-    path: path.join(__dirname, '..', 'backend', 'agroforestry_systems_design'),
+    path: app.isPackaged
+      ? path.join(process.resourcesPath, 'backend', 'agroforestry_systems_design')
+      : path.join(__dirname, '..', 'backend', 'agroforestry_systems_design'),
     port: 5001
   }
 ];
 
 // Start backend servers for both APIs
 async function startBackend() {
+  console.log('Python Path:', embedPythonPath);
+  console.log('Is Packaged:', app.isPackaged);
+  console.log('Resource Path:', process.resourcesPath);
+
   if (!fs.existsSync(embedPythonPath)) {
+    console.error('Python not found at:', embedPythonPath);
     throw new Error(`Embedded Python not found at: ${embedPythonPath}`);
   }
 

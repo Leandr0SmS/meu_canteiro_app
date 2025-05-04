@@ -23,18 +23,17 @@
     "files": [
       "electron/**/*",
       "frontend/**/*",
-      "backend/**/*",
       "package.json"
     ],
     "extraResources": [
       {
-        "from": "backend/python-embed",
-        "to": "backend/python-embed",
+        "from": "backend",
+        "to": "backend",
         "filter": ["**/*"]
       }
     ],
     "win": {
-      "target": "nsis",
+      "target": ["nsis", "portable"],
       "icon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.jpg"
     }
   }
