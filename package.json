@@ -22,19 +22,33 @@
     },
     "files": [
       "electron/**/*",
-      "frontend/**/*",
-      "package.json"
+      "frontend/**/*"
     ],
     "extraResources": [
       {
         "from": "backend",
         "to": "backend",
-        "filter": ["**/*"]
+        "filter": ["**/*", "!**/__pycache__/*"]
       }
     ],
     "win": {
       "target": ["nsis", "portable"],
-      "icon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.jpg"
+      "icon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.ico",
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.ico",
+      "uninstallerIcon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.ico",
+      "perMachine": false,
+      "allowElevation": false,
+      "runAfterFinish": true,
+      "include": "installer.nsh",
+      "installerSidebar": false,
+      "artifactName": "${productName}-Setup-${version}.${ext}"
     }
   }
 }
