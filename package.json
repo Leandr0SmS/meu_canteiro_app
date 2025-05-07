@@ -48,7 +48,7 @@
       "runAfterFinish": true,
       "include": "installer.nsh",
       "installerSidebar": false,
-      "artifactName": "${productName}-Setup-${version}.${ext}"
+      "artifactName": "${Meu Canteiro}-Setup-${1.0.0}.${ext}"
     }
   }
 }
