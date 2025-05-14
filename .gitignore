@@ -46,3 +46,13 @@ build/
 
 # VSCode
 .vscode/
+
+# Express/Node backend (novo)
+backend/meu_canteiro_back_end_node/node_modules/
+backend/meu_canteiro_back_end_node/.env
+backend/meu_canteiro_back_end_node/coverage/
+backend/meu_canteiro_back_end_node/*.log
+
+# Testes
+coverage/
+*.test.js
