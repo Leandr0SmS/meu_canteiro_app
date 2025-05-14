@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   getPlantas,
+  getPlantaById,
   addPlanta,
   updatePlanta,
   deletePlanta
@@ -8,7 +9,10 @@ import {
 
 const router = express.Router();
 
-router.get('/', getPlantas);
+
+router.get('/plantas', getPlantas);
+
+router.get('/', getPlantaById);
 router.post('/', addPlanta);
 router.put('/:id', updatePlanta);
 router.delete('/:id', deletePlanta);
