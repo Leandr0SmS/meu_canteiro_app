@@ -13,7 +13,18 @@ O projeto permite ao usuário:
 
 ## Executando:
 
-[Windows](https://github.com/Leandr0SmS/meu_canteiro_app/releases/tag/Beta)
+### Executavel:
+
+- [Electron Windows](https://github.com/Leandr0SmS/meu_canteiro_app/releases/tag/Beta)
+
+### Linha de Comando:
+
+1. Iniciar backends:
+
+    - [meu_canteiro_backend](./backend/meu_canteiro_back_end/README.md)
+    - [agroforestry_systems_design](./backend/agroforestry_systems_design/README.md)
+    - [Front-end](./frontend/meu_canteiro_front_end/README.md)
+    
 
 ## Arquitetura
 
@@ -46,5 +57,4 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 - [Cepeas](https://www.cepeas.org/)
 - [Agenda Gotsch](https://agendagotsch.com/)
 - [BrasilAPI](https://brasilapi.com.br/docs)
-- [MyMemory API DOCS](https://mymemory.translated.net/doc/)
 

@@ -32,7 +32,7 @@
       }
     ],
     "win": {
-      "target": ["nsis", "portable"],
+      "target": ["nsis", "portable", "zip"],
       "icon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.ico",
       "artifactName": "${productName}-Setup-${version}.${ext}"
     },
