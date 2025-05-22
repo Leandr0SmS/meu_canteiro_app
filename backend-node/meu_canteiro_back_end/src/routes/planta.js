@@ -31,12 +31,19 @@ import {
 
 const router = express.Router();
 
+// List all plants
+router.get('/', getPlantas);
 
-router.get('/plantas', getPlantas);
+// Get plant by ID
+router.get('/:id_planta', getPlantaById);
 
-router.get('/', getPlantaById);
+// Create new plant
 router.post('/', addPlanta);
-router.put('/:id', updatePlanta);
-router.delete('/:id', deletePlanta);
+
+// Update plant
+router.put('/:id_planta', updatePlanta);
+
+// Delete plant
+router.delete('/:id_planta', deletePlanta);
 
 export default router;

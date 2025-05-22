@@ -14,22 +14,27 @@ app.use(express.json());
 // Swagger documentation route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-app.use('/plantas', plantasRoutes); // Para listagem
-app.use('/planta', plantasRoutes);  // Para operações individuais
+// Use only one route for plantas
+app.use('/plantas', plantasRoutes);
 app.use('/canteiro', canteiroRoutes);
 
 app.get('/', (req, res) => {
   res.redirect('/api-docs');
 });
 
-sequelize.sync().then(async () => {
+sequelize.sync({ force: true }).then(async () => {
+  console.log('Banco de dados sincronizado');
   await populateDb();
+  console.log('Dados iniciais inseridos');
+  
   if (process.env.NODE_ENV !== 'test') {
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
       console.log(`API rodando em http://localhost:${PORT}`);
     });
   }
+}).catch(error => {
+  console.error('Erro ao sincronizar banco:', error);
 });
 
 export default app;

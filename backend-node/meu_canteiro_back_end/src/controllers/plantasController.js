@@ -12,10 +12,12 @@ export const getPlantas = async (req, res) => {
 
 export const getPlantaById = async (req, res) => {
   try {
-    const { id } = req.query;
-    if (!id) return res.status(400).json({ message: 'ID não informado' });
-    const planta = await Planta.findByPk(id);
+    const { id_planta } = req.params;
+    if (!id_planta) return res.status(400).json({ message: 'ID não informado' });
+    
+    const planta = await Planta.findByPk(id_planta);
     if (!planta) return res.status(404).json({ message: 'Planta não encontrada' });
+    
     res.status(200).json(apresentaPlanta(planta));
   } catch (error) {
     res.status(500).json({ message: 'Erro ao buscar planta', error: error.message });
