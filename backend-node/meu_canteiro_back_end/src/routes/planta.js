@@ -112,6 +112,50 @@ router.get('/:id_planta', getPlantaById);
 /**
  * @swagger
  * /plantas/{id_planta}:
+ *   post:
+ *     summary: Update a plant by ID
+ *     tags: [Plantas]
+ *     parameters:
+ *       - in: path
+ *         name: id_planta
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Plant ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tempo_colheita:
+ *                 type: integer
+ *                 required: false
+ *                 example: 140
+ *               estrato:
+ *                 type: string
+ *                 enum: [baixo, medio, alto, emergente]
+ *                 required: false
+ *                 example: "baixo"
+ *               espacamento:
+ *                 type: number
+ *                 format: float
+ *                 required: false
+ *                 example: 0.3
+ *     responses:
+ *       200:
+ *         description: Plant updated successfully
+ *       404:
+ *         description: Plant not found
+ *       400:
+ *         description: Invalid data provided
+ */
+router.post('/:id_planta', updatePlanta);
+
+/**
+ * @swagger
+ * /plantas/{id_planta}:
  *   delete:
  *     summary: Delete a plant by ID
  *     tags: [Plantas]

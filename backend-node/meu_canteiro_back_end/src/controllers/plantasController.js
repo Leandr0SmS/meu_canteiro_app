@@ -66,8 +66,43 @@ export const addPlanta = async (req, res) => {
   }
 };
 
-export const updatePlanta = (req, res) => {
-  res.status(200).json({ message: 'Planta atualizada!' }); // Mock
+export const updatePlanta = async (req, res) => {
+  try {
+    const { id_planta } = req.params;
+    const { tempo_colheita, estrato, espacamento } = req.body;
+
+    logger.debug(`Editando dados sobre planta #${id_planta}`);
+
+    // Find plant
+    const planta = await Planta.findByPk(id_planta);
+    if (!planta) {
+      const error_msg = "Planta não encontrada na base :/";
+      logger.warning(`Erro ao editar planta #${id_planta}, ${error_msg}`);
+      return res.status(404).json({ message: error_msg });
+    }
+
+    // Update only provided fields
+    if (tempo_colheita !== undefined) planta.tempo_colheita = tempo_colheita;
+    if (estrato !== undefined) planta.estrato = estrato;
+    if (espacamento !== undefined) planta.espacamento = espacamento;
+
+    // Save changes
+    await planta.save();
+    
+    logger.debug(`Editada planta #${id_planta}`);
+    return res.status(200).json({
+      message: "Planta atualizada",
+      nome_planta: planta.nome_planta,
+      ...apresentaPlanta(planta)
+    });
+
+  } catch (error) {
+    console.error(`Erro ao atualizar planta: ${error.message}`);
+    return res.status(400).json({ 
+      message: "Não foi possível atualizar a planta",
+      error: error.message 
+    });
+  }
 };
 
 export const deletePlanta = async (req, res) => {
