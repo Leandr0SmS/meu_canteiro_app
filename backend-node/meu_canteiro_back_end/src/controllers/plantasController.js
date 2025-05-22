@@ -1,5 +1,6 @@
 import Planta from '../models/Planta.js';
 import { apresentaPlantas, apresentaPlanta } from '../schemas/plantas.js';
+import logger from '../config/logger.js';
 
 export const getPlantas = async (req, res) => {
   try {
@@ -13,14 +14,22 @@ export const getPlantas = async (req, res) => {
 export const getPlantaById = async (req, res) => {
   try {
     const { id_planta } = req.params;
-    if (!id_planta) return res.status(400).json({ message: 'ID não informado' });
+    if (!id_planta) {
+      return res.status(400).json({ message: 'ID não informado' });
+    }
     
     const planta = await Planta.findByPk(id_planta);
-    if (!planta) return res.status(404).json({ message: 'Planta não encontrada' });
+    if (!planta) {
+      return res.status(404).json({ message: 'Planta não encontrada' });
+    }
     
-    res.status(200).json(apresentaPlanta(planta));
+    return res.status(200).json(apresentaPlanta(planta));
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar planta', error: error.message });
+    console.error(`Erro ao buscar planta: ${error.message}`);
+    return res.status(500).json({ 
+      message: 'Erro ao buscar planta', 
+      error: error.message 
+    });
   }
 };
 
@@ -61,6 +70,31 @@ export const updatePlanta = (req, res) => {
   res.status(200).json({ message: 'Planta atualizada!' }); // Mock
 };
 
-export const deletePlanta = (req, res) => {
-  res.status(200).json({ message: 'Planta removida!' }); // Mock
+export const deletePlanta = async (req, res) => {
+  try {
+    const { id_planta } = req.params;
+    
+    const planta = await Planta.findByPk(id_planta);
+    if (!planta) {
+      return res.status(404).json({ 
+        message: "Planta não encontrada na base :/" 
+      });
+    }
+
+    const nomePlanta = planta.nome_planta;
+    await planta.destroy();
+    
+    logger.debug(`Deletada planta #${id_planta}`);
+    return res.status(200).json({
+      message: "Planta removida",
+      nome_planta: nomePlanta
+    });
+
+  } catch (error) {
+    console.error(`Erro ao deletar planta: ${error.message}`);
+    return res.status(500).json({ 
+      message: "Erro ao deletar planta",
+      error: error.message 
+    });
+  }
 };

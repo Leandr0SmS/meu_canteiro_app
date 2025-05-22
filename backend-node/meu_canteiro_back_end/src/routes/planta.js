@@ -73,13 +73,71 @@ router.get('/', getPlantas);
 // Create new plant
 router.put('/', addPlanta);
 
-// Get plant by ID
+/**
+ * @swagger
+ * /plantas/{id_planta}:
+ *   get:
+ *     summary: Get a plant by ID
+ *     tags: [Plantas]
+ *     parameters:
+ *       - in: path
+ *         name: id_planta
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Plant ID
+ *     responses:
+ *       200:
+ *         description: Plant found successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id_planta:
+ *                   type: integer
+ *                 nome_planta:
+ *                   type: string
+ *                 tempo_colheita:
+ *                   type: integer
+ *                 estrato:
+ *                   type: string
+ *                 espacamento:
+ *                   type: number
+ *       404:
+ *         description: Plant not found
+ */
 router.get('/:id_planta', getPlantaById);
 
-// Update plant
-router.put('/:id_planta', updatePlanta);
-
-// Delete plant
+/**
+ * @swagger
+ * /plantas/{id_planta}:
+ *   delete:
+ *     summary: Delete a plant by ID
+ *     tags: [Plantas]
+ *     parameters:
+ *       - in: path
+ *         name: id_planta
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Plant ID
+ *     responses:
+ *       200:
+ *         description: Plant deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Planta removida"
+ *                 nome_planta:
+ *                   type: string
+ *       404:
+ *         description: Plant not found
+ */
 router.delete('/:id_planta', deletePlanta);
 
 export default router;
