@@ -7,6 +7,8 @@ import {
   deletePlanta
 } from '../controllers/plantasController.js';
 
+const router = express.Router();
+
 /**
  * @swagger
  * /plantas:
@@ -29,16 +31,50 @@ import {
  *                     type: string
  */
 
-const router = express.Router();
-
 // List all plants
 router.get('/', getPlantas);
 
-// Get plant by ID
-router.get('/:id_planta', getPlantaById);
+/**
+ * @swagger
+ * /plantas:
+ *   put:
+ *     summary: Create a new plant
+ *     tags: [Plantas]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome_planta:
+ *                 type: string
+ *                 example: "Batata-doce"
+ *               tempo_colheita:
+ *                 type: integer
+ *                 example: 140
+ *               estrato:
+ *                 type: string
+ *                 enum: [baixo, medio, alto, emergente]
+ *                 example: "baixo"
+ *               espacamento:
+ *                 type: number
+ *                 format: float
+ *                 example: 0.3
+ *     responses:
+ *       200:
+ *         description: Plant created successfully
+ *       409:
+ *         description: Plant with same name already exists
+ *       400:
+ *         description: Invalid data provided
+ */
 
 // Create new plant
-router.post('/', addPlanta);
+router.put('/', addPlanta);
+
+// Get plant by ID
+router.get('/:id_planta', getPlantaById);
 
 // Update plant
 router.put('/:id_planta', updatePlanta);
