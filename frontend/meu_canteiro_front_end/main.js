@@ -11,7 +11,7 @@ import {
 
 /*
   --------------------------------------------------------------------------------------
-  Variaveis
+  Variáveis
   --------------------------------------------------------------------------------------
 */
 const forcastBtn = document.getElementById('searchCityBtn');
@@ -279,7 +279,7 @@ function start() {
 
     // Opcional: esconder o botão novamente
     limparBtn.style.display = 'none';
-    // Resetar UI pós-salvamento
+    // Reset UI pós-salvamento
     document.getElementById('canteiro--form').style.display = 'none';
     selectNome.readOnly = false;
     salvarBtn.textContent = 'Salvar Canteiro';
@@ -359,13 +359,13 @@ function start() {
       event.preventDefault();
     
       const btnClass = event.target.className;
-      //propagar click para icone
+      //propagar click para ícone
       let btnId;
       btnClass == 'toggleBtnImg'
         ? btnId = event.target.parentNode.id
         : btnId = event.target.id;
       
-      // Seleionar botão e icone
+      // Selecionar botão e ícone
       const btn = document.getElementById(`${btnId}`);
       const icon = document.getElementById(`${btn.children[0].id}`);
       // Selecionar formulário 
@@ -374,13 +374,13 @@ function start() {
       // Pegar o primeiro <select> no form
       const firstSelect = form.querySelectorAll("select")[0];
     
-      // Mudar icone no click
+      // Mudar ícone no click
       if (btn.value == 'true') {
         form.style.display='none';
         icon.src = './resources/images/expand_more.svg';
         btn.value = 'false'
       } else if (btn.value == 'false') {
-        // Esconder fomrularios não usados
+        // Esconder formulários não usados
         toggleBtns.forEach(b => {
           if (b.value == 'true') {
             b.value = 'false'
@@ -388,7 +388,7 @@ function start() {
             const fId = b.id.substring(0, b.id.indexOf('_'));
             const f = document.getElementById(`${fId}`);
             f.style.display='none';
-            // Seleionar e trocar icones
+            // Selecionar e trocar ícones
             const i = document.getElementById(`${b.children[0].id}`);
             i.src = './resources/images/expand_more.svg';
           };
