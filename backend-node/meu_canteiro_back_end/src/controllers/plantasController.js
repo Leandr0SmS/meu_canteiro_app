@@ -35,7 +35,13 @@ export const getPlantaById = async (req, res) => {
 
 export const addPlanta = async (req, res) => {
   try {
-    const { nome_planta, tempo_colheita, estrato, espacamento } = req.body;
+    // Extract data from FormData
+    const nome_planta = req.body.nome_planta;
+    const estrato = req.body.estrato;
+    const tempo_colheita = parseInt(req.body.tempo_colheita);
+    const espacamento = parseFloat(req.body.espacamento);
+
+    logger.debug(`Tentando adicionar planta: ${nome_planta}`);
     
     // Create new plant
     const planta = await Planta.create({
@@ -45,20 +51,20 @@ export const addPlanta = async (req, res) => {
       espacamento
     });
 
-    console.log(`Planta adicionada: ${planta.nome_planta}`);
+    logger.debug(`Planta adicionada: ${planta.nome_planta}`);
     return res.status(200).json(apresentaPlanta(planta));
 
   } catch (error) {
     // Handle unique constraint violation
     if (error.name === 'SequelizeUniqueConstraintError') {
-      console.warn(`Erro: planta duplicada '${req.body.nome_planta}'`);
+      logger.warning(`Erro: planta duplicada '${req.body.nome_planta}'`);
       return res.status(409).json({ 
         message: "Planta de mesmo nome já existe na base" 
       });
     }
 
     // Handle other errors
-    console.error(`Erro ao adicionar planta: ${error.message}`);
+    logger.error(`Erro ao adicionar planta: ${error.message}`);
     return res.status(400).json({ 
       message: "Não foi possível salvar nova planta",
       error: error.message 

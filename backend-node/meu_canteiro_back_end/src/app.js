@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import multer from 'multer';
 import swaggerUi from 'swagger-ui-express';
 import { specs } from './config/swagger.js';
 import plantasRoutes from './routes/planta.js';
@@ -8,8 +9,12 @@ import sequelize from './config/db.js';
 import { populateDb } from './config/populateDb.js';
 
 const app = express();
+const upload = multer();
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
+app.use(upload.none()); // For parsing multipart/form-data
 
 // Swagger documentation route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
