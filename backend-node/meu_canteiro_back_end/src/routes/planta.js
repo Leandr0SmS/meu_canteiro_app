@@ -36,7 +36,7 @@ router.get('/', getPlantas);
 
 /**
  * @swagger
- * /plantas:
+ * /planta:
  *   put:
  *     summary: Create a new plant
  *     tags: [Plantas]

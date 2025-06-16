@@ -15,7 +15,7 @@ app.use(express.json());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Use only one route for plantas
-app.use('/plantas', plantasRoutes);
+app.use('/planta', plantasRoutes);
 app.use('/canteiro', canteiroRoutes);
 
 app.get('/', (req, res) => {
