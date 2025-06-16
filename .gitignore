@@ -56,3 +56,6 @@ backend/meu_canteiro_back_end_node/*.log
 # Testes
 coverage/
 *.test.js
+
+# database
+*.sqlite
