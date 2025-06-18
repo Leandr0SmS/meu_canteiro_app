@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
   res.redirect('/api-docs');
 });
 
-sequelize.sync({ force: true }).then(async () => {
+sequelize.sync().then(async () => {
   console.log('Banco de dados sincronizado');
   await populateDb();
   console.log('Dados iniciais inseridos');
