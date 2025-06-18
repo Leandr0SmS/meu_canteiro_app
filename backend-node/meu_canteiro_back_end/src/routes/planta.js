@@ -32,11 +32,11 @@ const router = express.Router();
  */
 
 // List all plants
-router.get('/', getPlantas);
+router.get('/plantas', getPlantas);
 
 /**
  * @swagger
- * /planta:
+ * /plantas:
  *   put:
  *     summary: Create a new plant
  *     tags: [Plantas]
@@ -71,11 +71,11 @@ router.get('/', getPlantas);
  */
 
 // Create new plant
-router.put('/', addPlanta);
+router.put('/planta', addPlanta);
 
 /**
  * @swagger
- * /plantas/{id_planta}:
+ * /planta/{id_planta}:
  *   get:
  *     summary: Get a plant by ID
  *     tags: [Plantas]

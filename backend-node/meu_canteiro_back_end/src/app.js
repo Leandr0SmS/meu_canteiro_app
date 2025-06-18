@@ -19,8 +19,7 @@ app.use(upload.none()); // For parsing multipart/form-data
 // Swagger documentation route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// Use only one route for plantas
-app.use('/planta', plantasRoutes);
+app.use('/', plantasRoutes);
 app.use('/canteiro', canteiroRoutes);
 
 app.get('/', (req, res) => {
