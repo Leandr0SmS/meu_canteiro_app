@@ -36,7 +36,7 @@ router.get('/plantas', getPlantas);
 
 /**
  * @swagger
- * /plantas:
+ * /planta:
  *   put:
  *     summary: Create a new plant
  *     tags: [Plantas]
@@ -111,37 +111,34 @@ router.get('/:id_planta', getPlantaById);
 
 /**
  * @swagger
- * /plantas/{id_planta}:
+ * /planta:
  *   post:
- *     summary: Update a plant by ID
+ *     summary: Update a plant by name
  *     tags: [Plantas]
- *     parameters:
- *       - in: path
- *         name: id_planta
- *         required: true
- *         schema:
- *           type: integer
- *         description: Plant ID
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
+ *               nome_planta:
+ *                 type: string
+ *                 description: Name of the plant to update
+ *                 example: "Batata-doce"
  *               tempo_colheita:
  *                 type: integer
- *                 required: false
+ *                 description: (Optional) New harvest time
  *                 example: 140
  *               estrato:
  *                 type: string
  *                 enum: [baixo, medio, alto, emergente]
- *                 required: false
+ *                 description: (Optional) New stratum
  *                 example: "baixo"
  *               espacamento:
  *                 type: number
  *                 format: float
- *                 required: false
+ *                 description: (Optional) New spacing
  *                 example: 0.3
  *     responses:
  *       200:
@@ -151,7 +148,7 @@ router.get('/:id_planta', getPlantaById);
  *       400:
  *         description: Invalid data provided
  */
-router.post('/:id_planta', updatePlanta);
+router.post('/planta', updatePlanta);
 
 /**
  * @swagger

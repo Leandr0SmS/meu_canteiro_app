@@ -74,39 +74,44 @@ export const addPlanta = async (req, res) => {
 
 export const updatePlanta = async (req, res) => {
   try {
-    const { id_planta } = req.params;
-    const { tempo_colheita, estrato, espacamento } = req.body;
+    // Receive plant name and other fields from body (FormData)
+    const plant_name = req.body.nome_planta;
+    const harvest_time = req.body.tempo_colheita;
+    const layer = req.body.estrato;
+    const spacing = req.body.espacamento;
 
-    logger.debug(`Editando dados sobre planta #${id_planta}`);
+    if (!plant_name) {
+      return res.status(400).json({ message: 'Plant name not provided' });
+    }
 
-    // Find plant
-    const planta = await Planta.findByPk(id_planta);
-    if (!planta) {
-      const error_msg = "Planta não encontrada na base :/";
-      logger.warning(`Erro ao editar planta #${id_planta}, ${error_msg}`);
+    logger.debug(`Editing plant: ${plant_name}`);
+
+    // Find plant by name
+    const plant = await Planta.findOne({ where: { nome_planta: plant_name } });
+    if (!plant) {
+      const error_msg = "Plant not found in database";
+      logger.warn(`Error editing plant ${plant_name}: ${error_msg}`);
       return res.status(404).json({ message: error_msg });
     }
 
     // Update only provided fields
-    if (tempo_colheita !== undefined) planta.tempo_colheita = tempo_colheita;
-    if (estrato !== undefined) planta.estrato = estrato;
-    if (espacamento !== undefined) planta.espacamento = espacamento;
+    if (harvest_time !== undefined) plant.tempo_colheita = parseInt(harvest_time);
+    if (layer !== undefined) plant.estrato = layer;
+    if (spacing !== undefined) plant.espacamento = parseFloat(spacing);
 
-    // Save changes
-    await planta.save();
-    
-    logger.debug(`Editada planta #${id_planta}`);
+    await plant.save();
+
+    logger.debug(`Plant updated: ${plant_name}`);
     return res.status(200).json({
-      message: "Planta atualizada",
-      nome_planta: planta.nome_planta,
-      ...apresentaPlanta(planta)
+      message: "Plant updated",
+      plant_name: plant.nome_planta
     });
 
   } catch (error) {
-    console.error(`Erro ao atualizar planta: ${error.message}`);
-    return res.status(400).json({ 
-      message: "Não foi possível atualizar a planta",
-      error: error.message 
+    logger.error(`Error updating plant: ${error.message}`);
+    return res.status(400).json({
+      message: "Could not update plant",
+      error: error.message
     });
   }
 };
