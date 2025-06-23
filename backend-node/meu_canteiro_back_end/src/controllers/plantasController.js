@@ -11,28 +11,6 @@ export const getPlantas = async (req, res) => {
   }
 };
 
-export const getPlantaById = async (req, res) => {
-  try {
-    const { id_planta } = req.params;
-    if (!id_planta) {
-      return res.status(400).json({ message: 'ID não informado' });
-    }
-    
-    const planta = await Planta.findByPk(id_planta);
-    if (!planta) {
-      return res.status(404).json({ message: 'Planta não encontrada' });
-    }
-    
-    return res.status(200).json(apresentaPlanta(planta));
-  } catch (error) {
-    console.error(`Erro ao buscar planta: ${error.message}`);
-    return res.status(500).json({ 
-      message: 'Erro ao buscar planta', 
-      error: error.message 
-    });
-  }
-};
-
 export const addPlanta = async (req, res) => {
   try {
     // Extract data from FormData
