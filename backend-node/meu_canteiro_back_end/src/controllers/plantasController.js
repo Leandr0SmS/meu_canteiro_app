@@ -96,22 +96,22 @@ export const updatePlanta = async (req, res) => {
 
 export const deletePlanta = async (req, res) => {
   try {
-    const { id_planta } = req.params;
+    // Receive plant name from body (FormData)
+    const nome_planta = req.body.nome_planta;
     
-    const planta = await Planta.findByPk(id_planta);
+    const planta = await Planta.findOne({ where: { nome_planta } });
     if (!planta) {
       return res.status(404).json({ 
         message: "Planta não encontrada na base :/" 
       });
     }
 
-    const nomePlanta = planta.nome_planta;
     await planta.destroy();
     
-    logger.debug(`Deletada planta #${id_planta}`);
+    logger.debug(`Deletada planta #${nome_planta}`);
     return res.status(200).json({
       message: "Planta removida",
-      nome_planta: nomePlanta
+      nome_planta: nome_planta
     });
 
   } catch (error) {

@@ -115,17 +115,21 @@ router.post('/planta', updatePlanta);
 
 /**
  * @swagger
- * /plantas/{id_planta}:
+ * /planta:
  *   delete:
- *     summary: Delete a plant by ID
+ *     summary: Delete a plant by Name
  *     tags: [Plantas]
- *     parameters:
- *       - in: path
- *         name: id_planta
- *         required: true
- *         schema:
- *           type: integer
- *         description: Plant ID
+ *     requestBody:
+ *           required: true
+ *           content:
+ *             multipart/form-data:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   nome_planta:
+ *                     type: string
+ *                     description: Name of the plant to update
+ *                     example: "Batata-doce"
  *     responses:
  *       200:
  *         description: Plant deleted successfully
@@ -142,6 +146,6 @@ router.post('/planta', updatePlanta);
  *       404:
  *         description: Plant not found
  */
-router.delete('/:id_planta', deletePlanta);
+router.delete('/planta', deletePlanta);
 
 export default router;
