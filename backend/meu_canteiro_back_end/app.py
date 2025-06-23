@@ -59,13 +59,13 @@ def add_planta(form: PlantaSchema):
         # como a duplicidade do nome é a provável razão do IntegrityError
         error_msg = "Planta de mesmo nome já salvo na base :/"
         logger.warning(f"Erro ao adicionar planta '{planta.nome_planta}', {error_msg}")
-        return {"mesage": error_msg}, 409
+        return {"mensage": error_msg}, 409
 
     except Exception as e:
         # caso um erro fora do previsto
         error_msg = "Não foi possível salvar nova planta :/"
         logger.warning(f"Erro ao adicionar planta '{planta.nome_planta}', {error_msg}")
-        return {"mesage": error_msg}, 400
+        return {"mensage": error_msg}, 400
     
 @app.post('/planta', tags=[planta_tag],
             responses={"200": PlantaUpdateSchema, "404": ErrorSchema})
@@ -119,7 +119,7 @@ def get_plantas():
             # se não há plantas cadastradas
             return {"plantas": []}, 200
         else:
-            logger.debug(f"%d plantas econtrados" % len(plantas))
+            logger.debug(f"%d plantas encontrados" % len(plantas))
             # retorna a representação de planta
             return apresenta_plantas(plantas), 200
 
@@ -141,7 +141,7 @@ def del_planta(query: PlantaBuscaSchema):
     if del_planta:
         # retorna a representação da mensagem de confirmação
         logger.debug(f"Deletado planta #{planta_nome}")
-        return {"mesage": "Planta removida", "nome_planta": planta_nome}
+        return {"mensage": "Planta removida", "nome_planta": planta_nome}
     else:
         # se o planta não foi encontrada
         error_msg = "Planta não encontrada na base :/"
