@@ -117,19 +117,15 @@ router.post('/planta', updatePlanta);
  * @swagger
  * /planta:
  *   delete:
- *     summary: Delete a plant by Name
+ *     summary: Delete a plant by name
  *     tags: [Plantas]
- *     requestBody:
- *           required: true
- *           content:
- *             multipart/form-data:
- *               schema:
- *                 type: object
- *                 properties:
- *                   nome_planta:
- *                     type: string
- *                     description: Name of the plant to update
- *                     example: "Batata-doce"
+ *     parameters:
+ *       - in: query
+ *         name: nome_planta
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Name of the plant to delete
  *     responses:
  *       200:
  *         description: Plant deleted successfully
@@ -143,6 +139,7 @@ router.post('/planta', updatePlanta);
  *                   example: "Planta removida"
  *                 nome_planta:
  *                   type: string
+ *                   example: "Batata-doce"
  *       404:
  *         description: Plant not found
  */

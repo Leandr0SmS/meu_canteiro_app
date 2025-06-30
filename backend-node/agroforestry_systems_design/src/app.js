@@ -12,8 +12,11 @@ app.use(express.json());
 
 // Swagger documentation route
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
 app.use('/', canteiroRoutes);
+
+app.get('/', (req, res) => {
+  res.redirect('/api-docs');
+});
 
 sequelize.sync().then(async () => {
   console.log('Banco de dados sincronizado');

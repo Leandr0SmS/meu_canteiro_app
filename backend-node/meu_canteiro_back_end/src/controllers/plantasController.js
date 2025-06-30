@@ -96,9 +96,13 @@ export const updatePlanta = async (req, res) => {
 
 export const deletePlanta = async (req, res) => {
   try {
-    // Receive plant name from body (FormData)
-    const nome_planta = req.body.nome_planta;
+    // Recebe o nome da planta da query string
+    const nome_planta = req.query.nome_planta;
     
+    if (!nome_planta) {
+      return res.status(400).json({ message: "nome_planta não informado" });
+    }
+
     const planta = await Planta.findOne({ where: { nome_planta } });
     if (!planta) {
       return res.status(404).json({ 
@@ -115,7 +119,7 @@ export const deletePlanta = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(`Erro ao deletar planta: ${error.message}`);
+    logger.error(`Erro ao deletar planta: ${error.message}`);
     return res.status(500).json({ 
       message: "Erro ao deletar planta",
       error: error.message 
