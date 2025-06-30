@@ -23,7 +23,7 @@ const router = express.Router();
  *             properties:
  *               nome_canteiro:
  *                 type: string
- *                 example: "Canteiro 1"
+ *                 example: "Canteiro_test"
  *               x_canteiro:
  *                 type: integer
  *                 example: 200
@@ -32,7 +32,28 @@ const router = express.Router();
  *                 example: 100
  *               plantas_canteiro:
  *                 type: object
- *                 example: { "alto": [], "baixo": [], "medio": [], "emergente": [] }
+ *                 example:
+ *                   plantas:
+ *                     - espacamento: 200
+ *                       estrato: "emergente"
+ *                       nome_planta: "Coco"
+ *                       sombra: 30
+ *                       tempo_colheita: 1095
+ *                     - espacamento: 60
+ *                       estrato: "alto"
+ *                       nome_planta: "Amora (Fruta)"
+ *                       sombra: 50
+ *                       tempo_colheita: 1800
+ *                     - espacamento: 50
+ *                       estrato: "medio"
+ *                       nome_planta: "Almeirão / Radiche"
+ *                       sombra: 65
+ *                       tempo_colheita: 70
+ *                     - espacamento: 40
+ *                       estrato: "baixo"
+ *                       nome_planta: "Abóbora"
+ *                       sombra: 75
+ *                       tempo_colheita: 90
  *     responses:
  *       201:
  *         description: Canteiro created successfully
@@ -61,6 +82,47 @@ router.put('/canteiro', createCanteiro);
  *         description: Canteiro not found
  */
 router.get('/canteiro', getCanteiro);
+
+/**
+ * @swagger
+ * /canteiros:
+ *   get:
+ *     summary: Get all canteiros
+ *     tags: [Canteiro]
+ *     responses:
+ *       200:
+ *         description: List of all canteiros
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id_canteiro:
+ *                     type: integer
+ *                   nome_canteiro:
+ *                     type: string
+ *                   x_canteiro:
+ *                     type: integer
+ *                   y_canteiro:
+ *                     type: integer
+ *                   plantas_canteiro:
+ *                     type: object
+ *       404:
+ *         description: No canteiros found
+ */
+router.get('/canteiros', async (req, res) => {
+  try {
+    const canteiros = await import('../models/canteiro.js').then(m => m.default.findAll());
+    if (!canteiros || canteiros.length === 0) {
+      return res.status(404).json({ message: 'No canteiros found' });
+    }
+    res.status(200).json(canteiros);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching canteiros', error: error.message });
+  }
+});
 
 /**
  * @swagger
