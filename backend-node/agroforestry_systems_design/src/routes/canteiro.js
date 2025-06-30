@@ -79,6 +79,14 @@ router.put('/canteiro', createCanteiro);
  *     responses:
  *       200:
  *         description: Canteiro found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 nome_canteiro:
+ *                   type: string
+ *                   example: "Canteiro1"
  *       404:
  *         description: Canteiro not found
  */
