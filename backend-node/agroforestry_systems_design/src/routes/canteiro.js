@@ -2,6 +2,7 @@ import express from 'express';
 import {
   createCanteiro,
   getCanteiro,
+  getAllCanteiros,
   updateCanteiro,
   deleteCanteiro
 } from '../controllers/canteiroController.js';
@@ -112,17 +113,7 @@ router.get('/canteiro', getCanteiro);
  *       404:
  *         description: No canteiros found
  */
-router.get('/canteiros', async (req, res) => {
-  try {
-    const canteiros = await import('../models/canteiro.js').then(m => m.default.findAll());
-    if (!canteiros || canteiros.length === 0) {
-      return res.status(404).json({ message: 'No canteiros found' });
-    }
-    res.status(200).json(canteiros);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching canteiros', error: error.message });
-  }
-});
+router.get('/canteiros', getAllCanteiros);
 
 /**
  * @swagger
@@ -139,16 +130,37 @@ router.get('/canteiros', async (req, res) => {
  *             properties:
  *               nome_canteiro:
  *                 type: string
- *                 example: "Canteiro 1"
+ *                 example: "Canteiro1"
  *               x_canteiro:
  *                 type: integer
- *                 example: 250
+ *                 example: 2000
  *               y_canteiro:
  *                 type: integer
- *                 example: 120
+ *                 example: 200
  *               plantas_canteiro:
  *                 type: object
- *                 example: { "alto": [], "baixo": [], "medio": [], "emergente": [] }
+ *                 example:
+ *                   plantas:
+ *                     - espacamento: 500
+ *                       estrato: "emergente"
+ *                       nome_planta: "Eucalipto"
+ *                       sombra: 30
+ *                       tempo_colheita: 1095
+ *                     - espacamento: 60
+ *                       estrato: "alto"
+ *                       nome_planta: "Mandioca"
+ *                       sombra: 50
+ *                       tempo_colheita: 365
+ *                     - espacamento: 30
+ *                       estrato: "medio"
+ *                       nome_planta: "Alho"
+ *                       sombra: 65
+ *                       tempo_colheita: 200
+ *                     - espacamento: 60
+ *                       estrato: "baixo"
+ *                       nome_planta: "Taioba"
+ *                       sombra: 75
+ *                       tempo_colheita: 75
  *     responses:
  *       200:
  *         description: Canteiro updated successfully

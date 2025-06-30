@@ -48,3 +48,15 @@ export const deleteCanteiro = async (req, res) => {
     res.status(500).json({ message: 'Erro ao deletar canteiro', error: error.message });
   }
 };
+
+export const getAllCanteiros = async (req, res) => {
+  try {
+    const canteiros = await import('../models/canteiro.js').then(m => m.default.findAll());
+    if (!canteiros || canteiros.length === 0) {
+      return res.status(404).json({ message: 'No canteiros found' });
+    }
+    res.status(200).json(canteiros);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching canteiros', error: error.message });
+  }
+};
