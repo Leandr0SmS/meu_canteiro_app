@@ -118,6 +118,7 @@ router.post('/planta', updatePlanta);
  * /planta:
  *   delete:
  *     summary: Delete a plant by name
+ *     summary: Delete a plant by name
  *     tags: [Plantas]
  *     parameters:
  *       - in: query
@@ -140,6 +141,7 @@ router.post('/planta', updatePlanta);
  *                   example: "Planta removida"
  *                 nome_planta:
  *                   type: string
+ *                   example: "Batata-doce"
  *       404:
  *         description: Plant not found
  */

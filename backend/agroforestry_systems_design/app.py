@@ -1,4 +1,4 @@
-from flask import redirect, jsonify,request
+from flask import redirect, jsonify, request
 from flask_openapi3 import OpenAPI, Info, Tag
 from flask_cors import CORS
 from logger import logger
@@ -59,13 +59,13 @@ def put_canteiro(body: CanteiroSchema):
             # como a duplicidade do nome é a provável razão do IntegrityError
             error_msg = "Canteiro de mesmo nome já salvo na base :/"
             logger.warning(f"Erro ao adicionar canteiro '{canteiro.nome_canteiro}', {error_msg}")
-            return {"mesage": error_msg}, 409
+            return {"mensage": error_msg}, 409
         
         except Exception as e:
             # caso um erro fora do previsto
             error_msg = "Não foi possível salvar novo canteiro :/"
             logger.warning(f"Erro ao adicionar planta '{canteiro.nome_canteiro}', {error_msg}")
-            return {"mesage": error_msg}, 400
+            return {"mensage": error_msg}, 400
         # Destribuindo plantas pela area do canteiro
         logger.debug(f"Destribuindo plantas no canteiro: '{canteiro.nome_canteiro}'")
         canteiro.distribuir_plantas()
@@ -84,7 +84,7 @@ def put_canteiro(body: CanteiroSchema):
          responses={"200": CanteiroSchemaDestribuido, "404": ErrorSchema})
 def buscar_canteiro(query: CanteiroBuscaSchema):
     """
-    Busca canteiro apartir do nome.
+    Busca canteiro a  partir do nome.
     
     Retorna os dados de um canteiro, incluindo as plantas destribuidas.
     """
@@ -106,7 +106,7 @@ def buscar_canteiro(query: CanteiroBuscaSchema):
 @app.post('/canteiro', tags=[canteiro_tag],
           responses={"200": CanteiroUpdateSchema, "409": ErrorSchema, "400": ErrorSchema})
 def edit_canteiro(body: CanteiroUpdateSchema):
-    """Busca canteiro apartir do nome e edita suas informções na base de dados
+    """Busca canteiro a partir do nome e edita suas informações na base de dados
     
     Retorna confirmação da edição"""
     
@@ -175,7 +175,7 @@ def del_canteiro(query: CanteiroBuscaSchema):
     if del_canteiro:
         # retorna a representação da mensagem de confirmação
         logger.debug(f"Deletado Canteiro #{canteiro_to_del}")
-        return {"mesage": "Canteiro removido", "nome_Canteiro": canteiro_to_del}
+        return {"mensage": "Canteiro removido", "nome_Canteiro": canteiro_to_del}
     else:
         # se o Canteiro não foi encontrado
         error_msg = "Canteiro não encontrado na base :/"

@@ -96,7 +96,7 @@ export const updatePlanta = async (req, res) => {
 
 export const deletePlanta = async (req, res) => {
   try {
-    // Busca nome_planta na query string
+    // Recebe o nome da planta da query string
     const nome_planta = req.query.nome_planta;
     
     if (!nome_planta) {
