@@ -21,9 +21,8 @@ app.get('/', (req, res) => {
 sequelize.sync().then(async () => {
   console.log('Banco de dados sincronizado');
   await populateDb();
-  app.listen(5002, () => {
-    console.log('API Agroforestry rodando em http://localhost:5002');
-    console.log('Swagger disponível em http://localhost:5002/api-docs');
+  app.listen(5001, () => {
+    console.log('API Agroforestry rodando em http://localhost:5001');
   });
 });
 

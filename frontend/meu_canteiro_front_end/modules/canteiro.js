@@ -24,7 +24,7 @@ async function todasPlantas() {
   --------------------------------------------------------------------------------------
 */
 async function criarCanteiro(canteiro) {
-    const url = config.meuCanteiroApi + '/canteiro';
+    const url = config.agroforestrySystemsDesignAPI + '/canteiro';
 
     try {
         const response = await fetch(url, {
@@ -268,7 +268,7 @@ function criarGrafico(dados) {
 */
 async function visualizarCanteiro(nomeCanteiro) {
     try {
-        const response = await fetch(`${config.meuCanteiroApi}/canteiro?nome_canteiro=${encodeURIComponent(nomeCanteiro)}`);
+        const response = await fetch(`${config.agroforestrySystemsDesignAPI}/canteiro?nome_canteiro=${encodeURIComponent(nomeCanteiro)}`);
 
         if (!response.ok) {
             if (response.status === 404) {
@@ -296,14 +296,14 @@ async function visualizarCanteiro(nomeCanteiro) {
 */
 async function carregarCanteiros(select, actions, form) {
     try {
-        const response = await fetch(`${config.meuCanteiroApi}/canteiros`);
+        const response = await fetch(`${config.agroforestrySystemsDesignAPI}/canteiros`);
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const data = await response.json();
 
-        const dataCanteiros = data.canteiro || [];
+        const dataCanteiros = data || [];
 
         select.innerHTML = `<option value="">Selecione um canteiro</option>`;
 
@@ -344,7 +344,7 @@ async function editarCanteiro(canteiro) {
     formData.append('id_planta_baixo', canteiro.id_planta_baixo);
 
     try {
-        const response = await fetch(`${config.meuCanteiroApi}/canteiro`, {
+        const response = await fetch(`${config.agroforestrySystemsDesignAPI}/canteiro`, {
             method: 'POST', 
             body: new URLSearchParams(formData)
         });
@@ -372,7 +372,7 @@ async function editarCanteiro(canteiro) {
   --------------------------------------------------------------------------------------
 */
 async function deletarCanteiro(nomeCanteiro) {
-    const url = `${meuCanteiroApi}/canteiros?nome_canteiro=${encodeURIComponent(nomeCanteiro)}`;
+    const url = `${agroforestrySystemsDesignAPI}/canteiros?nome_canteiro=${encodeURIComponent(nomeCanteiro)}`;
 
     try {
         const response = await fetch(url, {
