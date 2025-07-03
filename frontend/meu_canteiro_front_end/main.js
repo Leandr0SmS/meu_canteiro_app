@@ -105,10 +105,12 @@ function start() {
         nome_canteiro: nome,
         x_canteiro: x,
         y_canteiro: y,
-        id_planta_emergente: emergente,
-        id_planta_alto: alto,
-        id_planta_medio: medio,
-        id_planta_baixo: baixo
+        plantas_canteiro: [
+            { estrato: 'emergente', id_planta: emergente },
+            { estrato: 'alto', id_planta: alto },
+            { estrato: 'medio', id_planta: medio },
+            { estrato: 'baixo', id_planta: baixo }
+        ]
     };
 
     try {

@@ -1,5 +1,5 @@
 import { config } from '../config.js';
-const { meuCanteiroApi } = config;
+const { meuCanteiroApi, agroforestrySystemsDesignAPI } = config;
 
 /*
   --------------------------------------------------------------------------------------
@@ -372,7 +372,7 @@ async function editarCanteiro(canteiro) {
   --------------------------------------------------------------------------------------
 */
 async function deletarCanteiro(nomeCanteiro) {
-    const url = `${agroforestrySystemsDesignAPI}/canteiros?nome_canteiro=${encodeURIComponent(nomeCanteiro)}`;
+    const url = `${agroforestrySystemsDesignAPI}/canteiro?nome_canteiro=${encodeURIComponent(nomeCanteiro)}`;
 
     try {
         const response = await fetch(url, {
