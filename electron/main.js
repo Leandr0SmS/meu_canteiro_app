@@ -11,19 +11,18 @@ const isDev = process.argv.includes('--dev');
 
 // Caminhos dos backends Node.js
 const backendMainPath = app.isPackaged
-  ? path.join(process.resourcesPath, 'backend-node', 'meu_canteiro_back_end', 'src', 'app.js')
-  : path.join(__dirname, '..', 'backend-node', 'meu_canteiro_back_end', 'src', 'app.js');
+  ? path.join(process.resourcesPath, 'backend', 'meu_canteiro_back_end', 'src', 'app.js')
+  : path.join(__dirname, '..', 'backend', 'meu_canteiro_back_end', 'src', 'app.js');
 
 const backendCanteiroPath = app.isPackaged
-  ? path.join(process.resourcesPath, 'backend-node', 'agroforestry_systems_design', 'src', 'app.js')
-  : path.join(__dirname, '..', 'backend-node', 'agroforestry_systems_design', 'src', 'app.js');
+  ? path.join(process.resourcesPath, 'backend', 'agroforestry_systems_design', 'src', 'app.js')
+  : path.join(__dirname, '..', 'backend', 'agroforestry_systems_design', 'src', 'app.js');
 
 async function startBackends() {
   // Inicia o backend principal
   backendMainProcess = spawn('node', [backendMainPath], {
     cwd: path.dirname(backendMainPath),
-    stdio: 'inherit',
-    shell: true
+    stdio: 'inherit'
   });
   backendMainProcess.on('error', (err) => {
     console.error('[Main Backend] Failed to start:', err);
@@ -33,7 +32,6 @@ async function startBackends() {
   backendCanteiroProcess = spawn('node', [backendCanteiroPath], {
     cwd: path.dirname(backendCanteiroPath),
     stdio: 'inherit',
-    shell: true
   });
   backendCanteiroProcess.on('error', (err) => {
     console.error('[Canteiro Backend] Failed to start:', err);
