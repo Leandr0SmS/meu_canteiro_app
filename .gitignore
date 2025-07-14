@@ -2,6 +2,8 @@
 node_modules/
 dist/
 package-lock.json
+.npm/
+.cache/
 
 # macOS
 .DS_Store
@@ -22,28 +24,6 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
-
-# Python cache
-__pycache__/
-*.py[cod]
-*/__pycache__/
-
-# Python virtual environments
-venv/
-*/venv/
-
-# Pip
-*.egg-info/
-pip-selfcheck.json
-
-# Python embutido (ignora somente arquivos gerados, mas não o python.exe)
-backend/python-embed/__pycache__/
-backend/python-embed/Lib/__pycache__/
-backend/python-embed/Lib/site-packages/
-backend/python-embed/Lib/site-packages/**/__pycache__/
-backend/python-embed/Lib/site-packages/**/*.dist-info/
-backend/python-embed/Lib/site-packages/**/*.egg-info/
-backend/python-embed/Scripts/
 
 # Electron
 out/
@@ -66,6 +46,7 @@ coverage/
 
 # database
 *.sqlite
+*.sqlite3
 database.sqlite
 
 # IDE and OS specific
@@ -76,3 +57,13 @@ Thumbs.db
 
 # Test coverage
 /coverage
+
+# Release folder
+release/
+
+# Swap files
+*.swp
+*.swo
+
+# Node report
+node-report.*
