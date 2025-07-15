@@ -20,28 +20,32 @@ async function todasPlantas() {
 }
 /*
   --------------------------------------------------------------------------------------
-  Função para obter a lista das plantas via requisição GET 
+  Função para obter a lista das plantas 
   e montar o canteiro com as plantas selecionadas.
   --------------------------------------------------------------------------------------
 */
 async function montarPlantasCanteiro(canteiro) {
-  const response = await fetch(meuCanteiroApi + '/plantas');
+
+  // copia o canteiro para não alterar o original  
+  const canteiroInfoPlantas = canteiro;
+
+  // Monta o payload para a API
+  const payload = {
+    plantas: canteiro.plantas_canteiro
+  };
+
+  // Solicita as informações das plantas na rota /plantasInfo
+  const response = await fetch(meuCanteiroApi + '/plantasInfo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  });
   const data = await response.json();
-  const todasPlantas = data.plantas;
-  
-  // Armazena as informações do canteiro
-  const canteiroInfoPLantas = canteiro;
-  
-  // Extrai os IDs das plantas do canteiro
-  const ids = canteiro.plantas_canteiro.map(p => p.id_planta);
-
-  // Filtra e remove o campo id_planta
-  const plantasSelecionadas = todasPlantas
-    .filter(p => ids.includes(String(p.id_planta)))
-    .map(({ id_planta, ...rest }) => rest);
-
-  canteiroInfoPLantas.plantas_canteiro = { plantas: plantasSelecionadas };
-  return canteiroInfoPLantas;
+  // Retorna o objeto já no formato esperado
+  canteiroInfoPlantas.plantas_canteiro = { plantas: data.plantas };
+  return canteiroInfoPlantas;
 }
 /*
   --------------------------------------------------------------------------------------
@@ -53,7 +57,6 @@ async function criarCanteiro(canteiro) {
 
     // Monta as plantas do canteiro antes de enviar
     const canteiroMontado = await montarPlantasCanteiro(canteiro)
-
     try {
         const response = await fetch(url, {
             method: 'PUT',
@@ -62,7 +65,6 @@ async function criarCanteiro(canteiro) {
             },
             body: JSON.stringify(canteiroMontado)
         });
-
         const data = await response.json();
 
         if (!response.ok) {

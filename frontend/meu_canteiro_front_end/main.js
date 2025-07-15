@@ -172,6 +172,9 @@ function start() {
     }
 
     preencherFormulario(canteiroSelecionado);
+
+    console.log(canteiroSelecionado); //------Debug
+
     deletarBtn.style.display = 'inline-block';
     form.style.display = 'block';
   });

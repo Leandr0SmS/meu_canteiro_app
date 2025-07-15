@@ -1,4 +1,5 @@
 import Planta from '../models/Planta.js';
+import Estrato from '../models/Estrato.js';
 import { apresentaPlantas, apresentaPlanta } from '../schemas/plantas.js';
 import logger from '../config/logger.js';
 
@@ -124,5 +125,47 @@ export const deletePlanta = async (req, res) => {
       message: "Erro ao deletar planta",
       error: error.message 
     });
+  }
+};
+
+export const getInfoPlantas = async (req, res) => {
+  try {
+    // Espera receber { plantas: [ { id_planta, estrato, sombra } ] } no body
+    const { plantas } = req.body;
+    if (!Array.isArray(plantas)) {
+      return res.status(400).json({ message: 'Lista de plantas não fornecida ou inválida.' });
+    }
+
+    // Busca todas as plantas do banco pelos ids
+    const ids = plantas.map(p => p.id_planta);
+    const plantasDb = await Planta.findAll({ where: { id_planta: ids } });
+
+
+    // Monta resultado no formato solicitado
+    const resultado = await Promise.all(plantas.map(async p => {
+      const plantaDb = plantasDb.find(db => db.id_planta == p.id_planta);
+      if (!plantaDb) return null;
+      // Busca sombra na tabela estrato usando o estrato informado
+      const estratoDb = await Estrato.findOne({ where: { nome_estrato: p.estrato } });
+      if (!estratoDb) {
+        logger.warn(`Estrato '${p.estrato}' não encontrado para planta '${plantaDb.nome_planta}'`);
+        return null;
+      }
+      // Retorna objeto com as informações solicitadas
+      logger.debug(`Planta encontrada: ${plantaDb.nome_planta} com estrato ${p.estrato}`);
+      logger.debug(`Sombra: ${estratoDb.porcentagem_sombra}`); 
+      return {
+        espacamento: plantaDb.espacamento,
+        estrato: p.estrato,
+        nome_planta: plantaDb.nome_planta,
+        sombra: estratoDb ? estratoDb.porcentagem_sombra : 0,
+        tempo_colheita: plantaDb.tempo_colheita
+      };
+    }));
+
+    return res.status(200).json({ plantas: resultado.filter(Boolean) });
+  } catch (error) {
+    logger.error(`Erro ao buscar info das plantas: ${error.message}`);
+    return res.status(500).json({ message: 'Erro ao buscar info das plantas', error: error.message });
   }
 };

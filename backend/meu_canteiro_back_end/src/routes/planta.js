@@ -1,12 +1,73 @@
 import express from 'express';
 import {
-  getPlantas,
-  addPlanta,
-  updatePlanta,
-  deletePlanta
+getPlantas,
+addPlanta,
+updatePlanta,
+deletePlanta,
+getInfoPlantas
 } from '../controllers/plantasController.js';
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * /plantasInfo:
+ *   post:
+ *     summary: Retorna informações detalhadas das plantas por lista de ids e estrato
+ *     tags: [Plantas]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               plantas:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     id_planta:
+ *                       type: integer
+ *                       example: 2
+ *                     estrato:
+ *                       type: string
+ *                       example: "baixo"
+ *     responses:
+ *       200:
+ *         description: Informações das plantas retornadas com sucesso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 plantas:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       espacamento:
+ *                         type: number
+ *                         example: 40
+ *                       estrato:
+ *                         type: string
+ *                         example: "baixo"
+ *                       nome_planta:
+ *                         type: string
+ *                         example: "Abóbora"
+ *                       sombra:
+ *                         type: integer
+ *                         example: 75
+ *                       tempo_colheita:
+ *                         type: integer
+ *                         example: 90
+ *       400:
+ *         description: Dados inválidos fornecidos
+ *       500:
+ *         description: Erro interno ao buscar informações das plantas
+ */
+// Rota para obter informações das plantas por lista de ids e estrato
+router.post('/plantasInfo', getInfoPlantas);
 
 /**
  * @swagger
