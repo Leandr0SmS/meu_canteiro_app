@@ -1,5 +1,5 @@
 import Canteiro from '../models/canteiro.js';
-import { apresentaCanteiro } from '../schemas/canteiro.js';
+import { apresentaCanteiro, apresenta_canteiro_destribuido } from '../schemas/canteiro.js';
 import logger from '../config/logger.js';
 
 export const createCanteiro = async (req, res) => {
@@ -26,6 +26,24 @@ export const getCanteiro = async (req, res) => {
     console.log(`Canteiro ${nome_canteiro} encontrado`);
     // Return the found canteiro in the response
     res.status(200).json(apresentaCanteiro(canteiro));
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao buscar canteiro', error: error.message });
+    console.error(`Erro ao buscar canteiro: ${error.message}`);
+    logger.debug(`Erro ao buscar canteiro: ${error.message}`);
+  }
+};
+
+export const getCanteiroDistribuido = async (req, res) => {
+  try {
+    const { nome_canteiro } = req.query;
+    const canteiro = await Canteiro.findOne({ where: { nome_canteiro } });
+    if (!canteiro) return res.status(404).json({ message: 'Canteiro não encontrado' });
+    logger.debug(`Canteiro ${nome_canteiro} encontrado`);
+    console.log(`Canteiro ${nome_canteiro} encontrado`);
+    // Return the found canteiro in the response
+    canteiro.plantas_canteiro_destribuidas = await canteiro.distribuirPlantas();
+    // Return the distributed canteiro in the response
+    res.status(200).json(apresenta_canteiro_destribuido(canteiro));
   } catch (error) {
     res.status(500).json({ message: 'Erro ao buscar canteiro', error: error.message });
     console.error(`Erro ao buscar canteiro: ${error.message}`);

@@ -4,7 +4,8 @@ import {
   getCanteiro,
   getAllCanteiros,
   updateCanteiro,
-  deleteCanteiro
+  deleteCanteiro,
+  getCanteiroDistribuido
 } from '../controllers/canteiroController.js';
 
 const router = express.Router();
@@ -62,6 +63,38 @@ const router = express.Router();
  *         description: Invalid data provided
  */
 router.put('/canteiro', createCanteiro);
+
+/**
+ * @swagger
+ * /canteiroDestribuido:
+ *   get:
+ *     summary: Get a canteiro distribuido by name
+ *     tags: [Canteiro]
+ *     parameters:
+ *       - in: query
+ *         name: nome_canteiro
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Name of the canteiro to distribute
+ *     responses:
+ *       200:
+ *         description: Canteiro distribuido found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 nome_canteiro:
+ *                   type: string
+ *                   example: "Canteiro1"
+ *                 plantas_canteiro_destribuidas:
+ *                   type: object
+ *       404:
+ *         description: Canteiro not found
+ */
+router.get('/canteiroDestribuido', getCanteiroDistribuido);
+
 
 /**
  * @swagger

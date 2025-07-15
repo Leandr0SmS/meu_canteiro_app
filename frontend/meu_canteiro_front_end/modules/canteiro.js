@@ -20,11 +20,39 @@ async function todasPlantas() {
 }
 /*
   --------------------------------------------------------------------------------------
-  Função para obter a lista das plantas do canteiro no servidor via requisição GET
+  Função para obter a lista das plantas via requisição GET 
+  e montar o canteiro com as plantas selecionadas.
+  --------------------------------------------------------------------------------------
+*/
+async function montarPlantasCanteiro(canteiro) {
+  const response = await fetch(meuCanteiroApi + '/plantas');
+  const data = await response.json();
+  const todasPlantas = data.plantas;
+  
+  // Armazena as informações do canteiro
+  const canteiroInfoPLantas = canteiro;
+  
+  // Extrai os IDs das plantas do canteiro
+  const ids = canteiro.plantas_canteiro.map(p => p.id_planta);
+
+  // Filtra e remove o campo id_planta
+  const plantasSelecionadas = todasPlantas
+    .filter(p => ids.includes(String(p.id_planta)))
+    .map(({ id_planta, ...rest }) => rest);
+
+  canteiroInfoPLantas.plantas_canteiro = { plantas: plantasSelecionadas };
+  return canteiroInfoPLantas;
+}
+/*
+  --------------------------------------------------------------------------------------
+  Função para monstar canteiro PUT
   --------------------------------------------------------------------------------------
 */
 async function criarCanteiro(canteiro) {
     const url = config.agroforestrySystemsDesignAPI + '/canteiro';
+
+    // Monta as plantas do canteiro antes de enviar
+    const canteiroMontado = await montarPlantasCanteiro(canteiro)
 
     try {
         const response = await fetch(url, {
@@ -32,7 +60,7 @@ async function criarCanteiro(canteiro) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(canteiro)
+            body: JSON.stringify(canteiroMontado)
         });
 
         const data = await response.json();
@@ -268,23 +296,24 @@ function criarGrafico(dados) {
 */
 async function visualizarCanteiro(nomeCanteiro) {
     try {
-        const response = await fetch(`${config.agroforestrySystemsDesignAPI}/canteiro?nome_canteiro=${encodeURIComponent(nomeCanteiro)}`);
+        const response = await fetch(`${config.agroforestrySystemsDesignAPI}/canteiroDestribuido?nome_canteiro=${encodeURIComponent(nomeCanteiro)}`);
 
         if (!response.ok) {
             if (response.status === 404) {
                 alert("Canteiro não encontrado!");
             } else {
-                alert("Erro ao buscar o canteiro.");
+                alert("Erro ao buscar o canteiro distribuído.");
             }
             return;
         }
 
         const dadosCanteiro = await response.json();
-        dadosCanteiro.dados_grafico = dadosCanteiro.plantas_destribuidas;
+        console.log("Canteiro distribuído:", dadosCanteiro); //-------------------------------------------- DEBUG
+        dadosCanteiro.dados_grafico = dadosCanteiro.plantas_canteiro_destribuidas;
 
         criarGrafico(dadosCanteiro);
     } catch (error) {
-        console.error("Erro ao visualizar canteiro:", error);
+        console.error("Erro ao visualizar canteiro distribuído:", error);
         alert("Erro de conexão com a API.");
     }
 }
