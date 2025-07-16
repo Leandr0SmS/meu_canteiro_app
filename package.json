@@ -6,7 +6,9 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "backend:agro": "node backend/agroforestry_systems_design/src/app.js",
+    "backend:canteiro": "node backend/meu_canteiro_back_end/src/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,18 +25,10 @@
     },
     "files": [
       "electron/**/*",
-      "frontend/**/*"
+      "frontend/**/*",
+      "backend/**/*"
     ],
-    "extraResources": [
-      {
-        "from": "backend",
-        "to": "backend",
-        "filter": [
-          "**/*",
-          "!**/__pycache__/*"
-        ]
-      }
-    ],
+    "extraResources": [],
     "win": {
       "target": [
         "nsis",
@@ -53,10 +47,7 @@
       "uninstallerIcon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.ico",
       "perMachine": false,
       "allowElevation": false,
-      "runAfterFinish": true,
-      "include": "installer.nsh",
-      "installerSidebar": false,
-      "artifactName": "${Meu Canteiro}-Setup-${1.0.0}.${ext}"
+      "runAfterFinish": true
     }
   },
   "dependencies": {
