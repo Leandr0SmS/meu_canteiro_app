@@ -189,11 +189,15 @@ function start() {
 
     // Preenche os campos
     const nomeInput = document.getElementById('canteiro_nome');
+    const xInput = document.getElementById('canteiro_x');
+    const yInput = document.getElementById('canteiro_y');
     nomeInput.value = c.nome_canteiro;
     nomeInput.readOnly = true; // impede alterações no nome
 
-    document.getElementById('canteiro_x').value = c.x_canteiro;
-    document.getElementById('canteiro_y').value = c.y_canteiro;
+    xInput.value = c.x_canteiro;
+    xInput.readOnly = false; // permite edição do X
+    yInput.value = c.y_canteiro;
+    yInput.readOnly = false; // permite edição do Y
 
     // Define o modo de edição
     const salvarBtn = document.getElementById('saveCanteiroBtn');
