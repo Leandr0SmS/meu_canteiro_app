@@ -6,9 +6,7 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
-    "build": "electron-builder",
-    "backend:agro": "node backend/agroforestry_systems_design/src/app.js",
-    "backend:canteiro": "node backend/meu_canteiro_back_end/src/app.js"
+    "build": "electron-builder"
   },
   "author": "",
   "license": "ISC",
@@ -47,7 +45,10 @@
       "uninstallerIcon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.ico",
       "perMachine": false,
       "allowElevation": false,
-      "runAfterFinish": true
+      "runAfterFinish": true,
+      "include": "installer.nsh",
+      "installerSidebar": false,
+      "artifactName": "${Meu Canteiro}-Setup-${1.0.0}.${ext}"
     }
   },
   "dependencies": {
@@ -55,7 +56,7 @@
     "express": "^5.1.0",
     "multer": "^2.0.1",
     "sequelize": "^6.37.7",
-    "sqlite3": "^5.1.7",
+    "sqlite3": "5.1.6",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "winston": "^3.17.0"
