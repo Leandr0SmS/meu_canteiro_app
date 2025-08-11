@@ -4,6 +4,7 @@ dist/
 package-lock.json
 .npm/
 .cache/
+build-resources/
 
 # macOS
 .DS_Store
