@@ -10,6 +10,32 @@ let backendCanteiroProcess = null;
 
 const isDev = process.argv.includes('--dev');
 
+// DEBUG: NodePath
+console.log('DEBUG: Node path')
+function findNodeExe() {
+  const fs = require('fs');
+  if (!app.isPackaged) {
+    return process.execPath;
+  }
+
+  const possiblePaths = [
+    path.join(process.resourcesPath, 'node.exe'),
+    path.join(app.getAppPath(), '..', 'node.exe'),
+    path.join(process.resourcesPath, '..', 'node.exe')
+  ];
+
+  for (const nodePath of possiblePaths) {
+    if (fs.existsSync(nodePath)) {
+      console.log('DEBUG: Found node.exe at:', nodePath);
+      return nodePath;
+    }
+  }
+  
+  throw new Error('Could not find node.exe in any expected location');
+}
+
+const nodePath = findNodeExe();
+
 // DEBUG: Início do processo Electron
 console.log('DEBUG: Electron main process iniciado');
 
@@ -21,7 +47,10 @@ const backendCanteiroPath = app.isPackaged
   ? path.join(process.resourcesPath, 'backend', 'agroforestry_systems_design', 'src', 'app.js')
   : path.join(__dirname, '..', 'backend', 'agroforestry_systems_design', 'src', 'app.js');
 
-const nodePath = process.execPath;
+// Add error handler for unhandled rejections
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled rejection:', error);
+});
 
 function waitForPort(port, host = '127.0.0.1', timeout = 10000) {
   // DEBUG: Esperando porta
@@ -51,72 +80,114 @@ function waitForPort(port, host = '127.0.0.1', timeout = 10000) {
 }
 
 async function startBackends() {
-  // DEBUG: Iniciando backend principal
-  console.log('DEBUG: Iniciando backend principal:', backendMainPath);
-  backendMainProcess = spawn(nodePath, [backendMainPath], {
-    cwd: path.dirname(backendMainPath),
-    stdio: 'inherit'
-  });
-  backendMainProcess.on('error', (err) => {
-    console.error('[Main Backend] Failed to start:', err);
-  });
+  try {
+    const fs = require('fs');
+    
+    // DEBUG: Verificando caminhos base
+    console.log('DEBUG: process.resourcesPath:', process.resourcesPath);
+    console.log('DEBUG: app.getAppPath():', app.getAppPath());
+    console.log('DEBUG: __dirname:', __dirname);
+    console.log('DEBUG: process.cwd():', process.cwd());
+    
+    // DEBUG: Verificando node.exe
+    console.log('DEBUG: Procurando node.exe em:', nodePath);
+    if (!fs.existsSync(nodePath)) {
+      console.error('DEBUG: node.exe não encontrado!');
+      throw new Error(`node.exe not found at: ${nodePath}`);
+    }
+    console.log('DEBUG: node.exe encontrado!');
 
-  // DEBUG: Iniciando backend agroforestry_systems_design
-  console.log('DEBUG: Iniciando backend agroforestry:', backendCanteiroPath);
-  backendCanteiroProcess = spawn(nodePath, [backendCanteiroPath], {
-    cwd: path.dirname(backendCanteiroPath),
-    stdio: 'inherit',
-  });
-  backendCanteiroProcess.on('error', (err) => {
-    console.error('[Canteiro Backend] Failed to start:', err);
-  });
+    // DEBUG: Verificando backend paths
+    console.log('DEBUG: Verificando backend principal em:', backendMainPath);
+    if (!fs.existsSync(backendMainPath)) {
+      console.error('DEBUG: Backend principal não encontrado!');
+      throw new Error(`Main backend not found at: ${backendMainPath}`);
+    }
+    console.log('DEBUG: Backend principal encontrado!');
 
-  // DEBUG: Aguardando backends subirem
-  console.log('DEBUG: Aguardando backends subirem...');
-  await Promise.all([
-    waitForPort(5000, '127.0.0.1', 20000),
-    waitForPort(5001, '127.0.0.1', 20000)
-  ]);
-  // DEBUG: Backends prontos
-  console.log('DEBUG: Backends prontos!');
+    console.log('DEBUG: Verificando backend canteiro em:', backendCanteiroPath);
+    if (!fs.existsSync(backendCanteiroPath)) {
+      console.error('DEBUG: Backend canteiro não encontrado!');
+      throw new Error(`Canteiro backend not found at: ${backendCanteiroPath}`);
+    }
+    console.log('DEBUG: Backend canteiro encontrado!');
+
+    // DEBUG: Iniciando processos
+    console.log('DEBUG: Iniciando backend principal com:');
+    console.log('- Executável:', nodePath);
+    console.log('- Script:', path.basename(backendMainPath));
+    console.log('- Diretório:', path.dirname(backendMainPath));
+    
+    backendMainProcess = spawn(nodePath, [path.basename(backendMainPath)], {
+      cwd: path.dirname(backendMainPath),
+      stdio: 'inherit',
+      env: { ...process.env, NODE_ENV: app.isPackaged ? 'production' : 'development' }
+    });
+
+    console.log('DEBUG: Iniciando backend canteiro com:');
+    console.log('- Executável:', nodePath);
+    console.log('- Script:', path.basename(backendCanteiroPath));
+    console.log('- Diretório:', path.dirname(backendCanteiroPath));
+
+    backendCanteiroProcess = spawn(nodePath, [path.basename(backendCanteiroPath)], {
+      cwd: path.dirname(backendCanteiroPath),
+      stdio: 'inherit',
+      env: { ...process.env, NODE_ENV: app.isPackaged ? 'production' : 'development' }
+    });
+
+    // DEBUG: Aguardando backends subirem
+    console.log('DEBUG: Aguardando backends subirem...');
+    await Promise.all([
+      waitForPort(5000, '127.0.0.1', 30000),
+      waitForPort(5001, '127.0.0.1', 30000)
+    ]);
+
+    console.log('DEBUG: Backends prontos!');
+  } catch (error) {
+    console.error('DEBUG: Erro detalhado ao iniciar backends:', error);
+    throw error;
+  }
 }
 
 async function createWindow() {
-  // DEBUG: Chamando startBackends
-  console.log('DEBUG: Chamando startBackends');
-  await startBackends();
+  try {
+    // DEBUG: Chamando startBackends
+    console.log('DEBUG: Chamando startBackends');
+    await startBackends();
 
-  // DEBUG: Criando BrowserWindow
-  console.log('DEBUG: Criando BrowserWindow');
-  mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')
-    },
-    icon: path.join(__dirname, '..', 'frontend', 'meu_canteiro_front_end', 'resources', 'images', 'tree-icon.ico')
-  });
+    // DEBUG: Criando BrowserWindow
+    console.log('DEBUG: Criando BrowserWindow');
+    mainWindow = new BrowserWindow({
+      width: 1200,
+      height: 800,
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true,
+        preload: path.join(__dirname, 'preload.js')
+      },
+      icon: path.join(__dirname, '..', 'frontend', 'meu_canteiro_front_end', 'resources', 'images', 'tree-icon.ico')
+    });
 
-  const frontendPath = path.join(__dirname, '..', 'frontend', 'meu_canteiro_front_end', 'index.html');
-  // DEBUG: Carregando frontend
-  console.log('DEBUG: Carregando frontend:', frontendPath);
-  mainWindow.loadURL(url.format({
-    pathname: frontendPath,
-    protocol: 'file:',
-    slashes: true
-  }));
+    const frontendPath = app.isPackaged
+      ? path.join(process.resourcesPath, 'frontend', 'meu_canteiro_front_end', 'index.html')
+      : path.join(__dirname, '..', 'frontend', 'meu_canteiro_front_end', 'index.html');
 
-  if (isDev) {
-    mainWindow.webContents.openDevTools();
+    console.log('DEBUG: Carregando frontend:', frontendPath);
+    mainWindow.loadFile(frontendPath);  // Use loadFile em vez de loadURL
+
+    if (isDev) {
+      mainWindow.webContents.openDevTools();
+    }
+
+    mainWindow.on('closed', () => {
+      // DEBUG: Janela principal fechada
+      console.log('DEBUG: Janela principal fechada');
+      mainWindow = null;
+    });
+  } catch (error) {
+    console.error('Erro fatal ao iniciar aplicação:', error);
+    app.quit();
   }
-
-  mainWindow.on('closed', () => {
-    // DEBUG: Janela principal fechada
-    console.log('DEBUG: Janela principal fechada');
-    mainWindow = null;
-  });
 }
 
 // DEBUG: App pronto

@@ -12,7 +12,7 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^29.4.6",
-    "electron-builder": "^24.13.3",
+    "electron-builder": "^26.0.12",
     "jest": "^29.7.0"
   },
   "build": {
@@ -22,11 +22,22 @@
       "output": "dist"
     },
     "files": [
-      "electron/**/*",
-      "frontend/**/*",
-      "backend/**/*"
+      "electron/**/*"
     ],
-    "extraResources": [],
+    "extraResources": [
+      {
+        "from": "build-resources/node.exe",
+        "to": "node.exe"
+      },
+      {
+        "from": "frontend/meu_canteiro_front_end",
+        "to": "frontend/meu_canteiro_front_end"
+      },
+      {
+        "from": "backend/",
+        "to": "backend/"
+      }
+    ],
     "win": {
       "target": [
         "nsis",
