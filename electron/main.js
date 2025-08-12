@@ -1,6 +1,5 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const url = require('url');
 const { spawn } = require('child_process');
 const net = require('net');
 
@@ -10,40 +9,16 @@ let backendCanteiroProcess = null;
 
 const isDev = process.argv.includes('--dev');
 
-// DEBUG: NodePath
-console.log('DEBUG: Node path')
-function findNodeExe() {
-  const fs = require('fs');
-  if (!app.isPackaged) {
-    return process.execPath;
-  }
+const nodePath = path.join(process.resourcesPath, 'node.exe');
 
-  const possiblePaths = [
-    path.join(process.resourcesPath, 'node.exe'),
-    path.join(app.getAppPath(), '..', 'node.exe'),
-    path.join(process.resourcesPath, '..', 'node.exe')
-  ];
-
-  for (const nodePath of possiblePaths) {
-    if (fs.existsSync(nodePath)) {
-      console.log('DEBUG: Found node.exe at:', nodePath);
-      return nodePath;
-    }
-  }
-  
-  throw new Error('Could not find node.exe in any expected location');
-}
-
-const nodePath = findNodeExe();
-
-// DEBUG: Início do processo Electron
-console.log('DEBUG: Electron main process iniciado');
+// DEBUG: Electron main process
+console.log('DEBUG: Electron main process started');
 
 const backendMainPath = app.isPackaged
   ? path.join(process.resourcesPath, 'backend', 'meu_canteiro_back_end', 'src', 'app.js')
   : path.join(__dirname, '..', 'backend', 'meu_canteiro_back_end', 'src', 'app.js');
 
-const backendCanteiroPath = app.isPackaged
+const agroforestrySystemsDesignPath = app.isPackaged
   ? path.join(process.resourcesPath, 'backend', 'agroforestry_systems_design', 'src', 'app.js')
   : path.join(__dirname, '..', 'backend', 'agroforestry_systems_design', 'src', 'app.js');
 
@@ -80,43 +55,12 @@ function waitForPort(port, host = '127.0.0.1', timeout = 10000) {
 }
 
 async function startBackends() {
+
   try {
     const fs = require('fs');
-    
-    // DEBUG: Verificando caminhos base
-    console.log('DEBUG: process.resourcesPath:', process.resourcesPath);
-    console.log('DEBUG: app.getAppPath():', app.getAppPath());
-    console.log('DEBUG: __dirname:', __dirname);
-    console.log('DEBUG: process.cwd():', process.cwd());
-    
-    // DEBUG: Verificando node.exe
-    console.log('DEBUG: Procurando node.exe em:', nodePath);
-    if (!fs.existsSync(nodePath)) {
-      console.error('DEBUG: node.exe não encontrado!');
-      throw new Error(`node.exe not found at: ${nodePath}`);
-    }
-    console.log('DEBUG: node.exe encontrado!');
-
-    // DEBUG: Verificando backend paths
-    console.log('DEBUG: Verificando backend principal em:', backendMainPath);
-    if (!fs.existsSync(backendMainPath)) {
-      console.error('DEBUG: Backend principal não encontrado!');
-      throw new Error(`Main backend not found at: ${backendMainPath}`);
-    }
-    console.log('DEBUG: Backend principal encontrado!');
-
-    console.log('DEBUG: Verificando backend canteiro em:', backendCanteiroPath);
-    if (!fs.existsSync(backendCanteiroPath)) {
-      console.error('DEBUG: Backend canteiro não encontrado!');
-      throw new Error(`Canteiro backend not found at: ${backendCanteiroPath}`);
-    }
-    console.log('DEBUG: Backend canteiro encontrado!');
 
     // DEBUG: Iniciando processos
     console.log('DEBUG: Iniciando backend principal com:');
-    console.log('- Executável:', nodePath);
-    console.log('- Script:', path.basename(backendMainPath));
-    console.log('- Diretório:', path.dirname(backendMainPath));
     
     backendMainProcess = spawn(nodePath, [path.basename(backendMainPath)], {
       cwd: path.dirname(backendMainPath),
@@ -125,12 +69,9 @@ async function startBackends() {
     });
 
     console.log('DEBUG: Iniciando backend canteiro com:');
-    console.log('- Executável:', nodePath);
-    console.log('- Script:', path.basename(backendCanteiroPath));
-    console.log('- Diretório:', path.dirname(backendCanteiroPath));
 
-    backendCanteiroProcess = spawn(nodePath, [path.basename(backendCanteiroPath)], {
-      cwd: path.dirname(backendCanteiroPath),
+    backendCanteiroProcess = spawn(nodePath, [path.basename(agroforestrySystemsDesignPath)], {
+      cwd: path.dirname(agroforestrySystemsDesignPath),
       stdio: 'inherit',
       env: { ...process.env, NODE_ENV: app.isPackaged ? 'production' : 'development' }
     });
@@ -173,7 +114,7 @@ async function createWindow() {
       : path.join(__dirname, '..', 'frontend', 'meu_canteiro_front_end', 'index.html');
 
     console.log('DEBUG: Carregando frontend:', frontendPath);
-    mainWindow.loadFile(frontendPath);  // Use loadFile em vez de loadURL
+    mainWindow.loadFile(frontendPath);
 
     if (isDev) {
       mainWindow.webContents.openDevTools();
@@ -212,24 +153,46 @@ app.on('activate', () => {
   }
 });
 
-app.on('quit', () => {
-  // DEBUG: App quit, matando backends
-  console.log('DEBUG: App quit, matando backends');
-  [backendMainProcess, backendCanteiroProcess].forEach((proc) => {
-    if (proc) {
-      try {
-        if (process.platform === 'win32') {
-          spawn('taskkill', ['/pid', proc.pid, '/f', '/t'], {
-            windowsHide: true
-          });
-        } else {
-          proc.kill('SIGTERM');
-        }
-      } catch (error) {
-        console.error('Failed to terminate backend process:', error);
-      }
+// Adicione esta função para matar processos
+function killProcess(proc) {
+  if (!proc) return;
+  
+  try {
+    if (process.platform === 'win32') {
+      // No Windows, mata o processo e seus filhos
+      spawn('taskkill', ['/pid', proc.pid, '/f', '/t'], {
+        windowsHide: true,
+        detached: true
+      }).on('exit', () => {
+        console.log(`Process ${proc.pid} killed`);
+      });
+    } else {
+      proc.kill('SIGTERM');
     }
-  });
+  } catch (error) {
+    console.error('Failed to terminate process:', error);
+  }
+}
+
+// Substitua o handler do 'quit' existente por este
+app.on('quit', () => {
+  console.log('DEBUG: App quit, matando backends');
+  
+  // Mata os processos backend
+  [backendMainProcess, backendCanteiroProcess].forEach(killProcess);
+  
+  // Força o processo principal a encerrar após 2 segundos
+  setTimeout(() => {
+    console.log('DEBUG: Forçando encerramento');
+    process.exit(0);
+  }, 2000);
+});
+
+// Adicione este handler para 'before-quit'
+app.on('before-quit', (event) => {
+  console.log('DEBUG: before-quit');
+  // Mata os processos backend
+  [backendMainProcess, backendCanteiroProcess].forEach(killProcess);
 });
 
 // DEBUG: Fim do main.js
