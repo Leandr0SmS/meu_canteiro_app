@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
+    "prebuild": "npm install --prefix backend/meu_canteiro_back_end && npm install --prefix backend/agroforestry_systems_design && node -e \"const fs=require('fs');fs.mkdirSync('resources',{recursive:true});fs.copyFileSync(process.execPath,'resources/node.exe')\"",
     "build": "electron-builder"
   },
   "author": "",
@@ -13,7 +14,7 @@
   "devDependencies": {
     "electon": "^0.0.1-security",
     "electron": "^41.2.0",
-    "electron-builder": "^26.0.12",
+    "electron-builder": "^26.8.1",
     "jest": "^29.7.0"
   },
   "build": {
@@ -23,11 +24,22 @@
       "output": "dist"
     },
     "files": [
-      "electron/**/*",
-      "frontend/**/*",
-      "backend/**/*"
+      "electron/**/*"
     ],
-    "extraResources": [],
+    "extraResources": [
+      {
+        "from": "resources/node.exe",
+        "to": "node.exe"
+      },
+      {
+        "from": "backend",
+        "to": "backend"
+      },
+      {
+        "from": "frontend",
+        "to": "frontend"
+      }
+    ],
     "win": {
       "target": [
         "nsis",
@@ -46,7 +58,7 @@
       "uninstallerIcon": "frontend/meu_canteiro_front_end/resources/images/tree-icon.ico",
       "perMachine": false,
       "allowElevation": false,
-      "runAfterFinish": true
+      "runAfterFinish": false
     }
   },
   "dependencies": {

@@ -9,7 +9,9 @@ let backendCanteiroProcess = null;
 
 const isDev = process.argv.includes('--dev');
 
-const nodePath = path.join(process.resourcesPath, 'node.exe');
+const nodePath = app.isPackaged
+  ? path.join(process.resourcesPath, 'node.exe')
+  : 'node';
 
 // DEBUG: Electron main process
 console.log('DEBUG: Electron main process started');

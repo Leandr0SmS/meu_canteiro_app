@@ -54,6 +54,9 @@ coverage/
 *.sqlite3
 database.sqlite
 
+# Node binary bundled for packaged app
+resources/node.exe
+
 # IDE and OS specific
 .vscode/
 .idea/
