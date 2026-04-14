@@ -6,16 +6,14 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
-    "build": "electron-builder",
-    "backend:agro": "node backend/agroforestry_systems_design/src/app.js",
-    "backend:canteiro": "node backend/meu_canteiro_back_end/src/app.js"
+    "build": "electron-builder"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "electon": "^0.0.1-security",
     "electron": "^41.2.0",
-    "electron-rebuild": "^3.2.9",
+    "electron-builder": "^26.0.12",
     "jest": "^29.7.0"
   },
   "build": {
