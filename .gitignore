@@ -6,7 +6,7 @@ package-lock.json
 .cache/
 
 #IA
-github/
+.github/
 
 # macOS
 .DS_Store
